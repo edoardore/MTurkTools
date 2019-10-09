@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mechanical Turk HIT Results</title>
+</head>
+<body>
+<style>
+    body {
+        font-family: Arial;
+        margin: 10px 10px 10px 10px;
+        padding: 0;
+        color: white;
+        text-align: center;
+        background: #555652;
+    }
+
+    img {
+        display: inline-block;
+        max-width: 100%;
+        height: auto;
+        margin: 1%;
+        transition: transform .2s;
+    }
+
+    img:hover {
+        transform: scale(1.02);
+        opacity: 0.8;
+    }
+</style>
+<div style="margin: 10px;">
+    <img src="{{ url_for('static', filename='dashboardLogo.png') }}" width="323" height="60">
+</div>
+<a href="chartFile" style="text-decoration:none">
+    <img src="{{ url_for('static', filename='graph1.PNG') }}" height="200" width="323"/>
+</a>
+<a href="chartWorker" style="text-decoration:none">
+    <img src="{{ url_for('static', filename='graph2.PNG') }}" height="200" width="323"/>
+</a>
+<a href="radar" style="text-decoration:none">
+    <img src="{{ url_for('static', filename='graph3.PNG') }}" height="200" width="323"/>
+</a>
+<a href="cake" style="text-decoration:none">
+    <img src="{{ url_for('static', filename='graph4.PNG') }}" height="200" width="323"/>
+</a>
+<a href="topUser" style="text-decoration:none">
+    <img src="{{ url_for('static', filename='graph5.PNG') }}" height="200" width="323"/>
+</a>
+<a href="scatter" style="text-decoration:none">
+    <img src="{{ url_for('static', filename='graph6.PNG') }}" height="200" width="323"/>
+</a>
+<a href="randomChart" style="text-decoration:none">
+    <img src="{{ url_for('static', filename='graph7.PNG') }}" height="200" width="323"/>
+</a>
+<a href="sexChart" style="text-decoration:none">
+    <img src="{{ url_for('static', filename='graph8.PNG') }}" height="200" width="323"/>
+</a>
+<a href="resolution" style="text-decoration:none">
+    <img src="{{ url_for('static', filename='graph10.PNG') }}" height="200" width="323"/>
+</a>
+<a href="age" style="text-decoration:none">
+    <img src="{{ url_for('static', filename='graph11.PNG') }}" height="200" width="323"/>
+</a>
+<a href="personal" style="text-decoration:none">
+    <img src="{{ url_for('static', filename='graph9.PNG') }}" height="200" width="323"/>
+</a>
+</div>
+
+</body>
+</html>
