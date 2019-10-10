@@ -52,4 +52,7 @@ def getImg():
     for img in images:
         if upload_to_aws(directory + "/" + img, 'imagesformturk', directory + "/" + img):
             uploaded.append("https://imagesformturk.s3.eu-central-1.amazonaws.com/" + directory + "/" + img)
-    return uploaded
+    tuple=[]
+    tuple.append(uploaded)
+    tuple.append(directory)
+    return tuple

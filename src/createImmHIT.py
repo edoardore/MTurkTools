@@ -20,7 +20,13 @@ def execute():
                           aws_secret_access_key=aws_secret_access_key,
                           )
     # Se si creano Hit aggiuntive mettere a True questa variabile
-    images = imageManager.getImg()
+    tuple = imageManager.getImg()
+    images = tuple[0]
+    directory = tuple[1]
+    if directory == 'images':
+        directory = 0
+    else:
+        directory = directory[6:len(directory)]
     i = 0
     for img in images:
         i += 1
@@ -47,9 +53,9 @@ def execute():
         # prepare a cursor object using cursor() method
         cursor = db.cursor()
         # Prepare SQL query to INSERT a record into the database.
-        sqlInsert = "INSERT INTO `imagefile`(HIT_ID, IMAGE_FILE)VALUES" \
-                    "('%s', '%s')" \
-                    % (hit_id, img)
+        sqlInsert = "INSERT INTO `imagefile`(HIT_ID, IMAGE_FILE, FOLDER)VALUES" \
+                    "('%s', '%s', '%s')" \
+                    % (hit_id, img, directory)
         try:
             cursor.execute(sqlInsert)
             # Commit your changes in the database

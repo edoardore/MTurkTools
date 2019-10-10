@@ -20,7 +20,14 @@ def execute():
                           aws_secret_access_key=aws_secret_access_key,
                           )
     # Se si creano Hit aggiuntive mettere a True questa variabile
-    videos = videoManager.getVid()
+    tuple = videoManager.getVid()
+    videos = tuple[0]
+    directory = tuple[1]
+    if directory == 'video':
+        directory = 0
+    else:
+        directory = directory[5:len(directory)]
+
     i = 0
     for vid in videos:
         i += 1
@@ -47,9 +54,9 @@ def execute():
         # prepare a cursor object using cursor() method
         cursor = db.cursor()
         # Prepare SQL query to INSERT a record into the database.
-        sqlInsert = "INSERT INTO `videofile`(HIT_ID, VIDEO_FILE)VALUES" \
-                    "('%s', '%s')" \
-                    % (hit_id, vid)
+        sqlInsert = "INSERT INTO `videofile`(HIT_ID, VIDEO_FILE, FOLDER)VALUES" \
+                    "('%s', '%s', '%s')" \
+                    % (hit_id, vid, directory)
         try:
             cursor.execute(sqlInsert)
             # Commit your changes in the database

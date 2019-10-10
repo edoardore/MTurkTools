@@ -52,4 +52,7 @@ def getVid():
     for vid in videos:
         if upload_to_aws(directory + "/" + vid, 'videosformturk', directory + "/" + vid):
             uploaded.append("https://imagesformturk.s3.eu-central-1.amazonaws.com/" + directory + "/" + vid)
-    return uploaded
+    tuple = []
+    tuple.append(uploaded)
+    tuple.append(directory)
+    return tuple
