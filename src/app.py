@@ -157,45 +157,6 @@ def upload():
         return redirect(url_for('home'))
 
 
-@app.route("/home", methods=['POST'])
-def homepost():
-    refreshButtonNumber = request.form['button']
-    db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
-    # prepare a cursor object using cursor() method
-    cursor = db.cursor()
-    # Prepare SQL query to INSERT a record into the database.
-    sqlSelect = "SELECT DESCRIPTION FROM metaimage"
-    sqlSelect2 = "SELECT DESCRIPTION FROM metavideo"
-    try:
-        cursor.execute(sqlSelect)
-        resultimage = cursor.fetchall()
-        cursor.execute(sqlSelect2)
-        resultvideo = cursor.fetchall()
-    except:
-        # Rollback in case there is any error
-        db.rollback()
-    # disconnect from server
-    db.close()
-    result = []
-    for i in range(0, 12):
-        result.append('')
-    i = 0
-    for description in resultimage:
-        result[i] = description[0]
-        i += 1
-    i = 6
-    for description in resultvideo:
-        result[i] = description[0]
-        i += 1
-    if refreshButtonNumber < 6 and refreshButtonNumber >= 0:
-        resultsImm.execute(refreshButtonNumber)
-    elif refreshButtonNumber >= 6 and refreshButtonNumber < 12:
-        resultsVid.execute(refreshButtonNumber)
-
-    return render_template("home.html", label0=result[0], label1=result[1], label2=result[2],
-                           label3=result[3], label4=result[4], label5=result[5], label6=result[6], label7=result[7],
-                           label8=result[8], label9=result[9], label10=result[10], label11=result[11])
-
 @app.route("/home")
 def home():
     db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
@@ -230,7 +191,45 @@ def home():
                            label8=result[8], label9=result[9], label10=result[10], label11=result[11])
 
 
+@app.route("/homepost", methods=['POST'])
+def homepost():
+    refreshButtonNumber = request.form['button']
+    db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+    # prepare a cursor object using cursor() method
+    cursor = db.cursor()
+    # Prepare SQL query to INSERT a record into the database.
+    sqlSelect = "SELECT DESCRIPTION FROM metaimage"
+    sqlSelect2 = "SELECT DESCRIPTION FROM metavideo"
+    try:
+        cursor.execute(sqlSelect)
+        resultimage = cursor.fetchall()
+        cursor.execute(sqlSelect2)
+        resultvideo = cursor.fetchall()
+    except:
+        # Rollback in case there is any error
+        db.rollback()
+    # disconnect from server
+    db.close()
+    result = []
+    for i in range(0, 12):
+        result.append('')
+    i = 0
+    for description in resultimage:
+        result[i] = description[0]
+        i += 1
+    i = 6
+    for description in resultvideo:
+        result[i] = description[0]
+        i += 1
+    refreshButtonNumber = int(refreshButtonNumber)
+    if refreshButtonNumber < 6 and refreshButtonNumber >= 0:
+        percent = str(resultsImm.execute(refreshButtonNumber)) + '% of the Task completed by Workers'
+    elif refreshButtonNumber >= 6 and refreshButtonNumber < 12:
+        percent = str(resultsVid.execute(refreshButtonNumber - 6)) + '% of the Task completed by Workers'
 
+    return render_template("home.html", label0=result[0], label1=result[1], label2=result[2],
+                           label3=result[3], label4=result[4], label5=result[5], label6=result[6], label7=result[7],
+                           label8=result[8], label9=result[9], label10=result[10], label11=result[11], percent=percent)
 
 
 @app.route("/dashboard")

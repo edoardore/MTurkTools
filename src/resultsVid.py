@@ -35,8 +35,9 @@ def execute(folder):
         db.rollback()
     # disconnect from server
     db.close()
-
     i = 0
+    totalLength = len(hit_id) * 5
+    submitted = 0
     for id in hit_id:
         id = id[0]
         i += 1
@@ -84,6 +85,7 @@ def execute(folder):
                 sqlInsert = "INSERT INTO submitted(WORKER_ID, HIT_ID, QUALITY, AGE, SEX, RESOLUTION)VALUES" \
                             "('%s', '%s', '%s', '%s', '%s', '%s')" \
                             % (WorkerId, id, quality, age, sex, resolution)
+                submitted += 1
                 try:
                     cursor.execute(sqlSelect)
                     result = cursor.fetchall()
@@ -99,5 +101,6 @@ def execute(folder):
                 # disconnect from server
                 db.close()
         else:
-            print 'Waiting minimum another ' + str(3 - numAssignmentSubmitted) + ' assignments'
+            print 'Waiting minimum another ' + str(MinAssignments - numAssignmentSubmitted) + ' assignments'
         print ''
+    return submitted * 100 / totalLength
