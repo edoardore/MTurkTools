@@ -6,7 +6,7 @@ import Key
 import pymysql
 
 
-def getImg():
+def getVid():
     aws_access_key_id = Key.getAws_access_key_id()
     aws_secret_access_key = Key.getAws_secret_access_key()
 
@@ -17,7 +17,7 @@ def getImg():
                           )
 
         try:
-            s3.put_object(Bucket="imagesformturk", Key=(directory + '/'))
+            s3.put_object(Bucket="videosformturk", Key=(directory + '/'))
 
             s3.upload_file(local_file, bucket, s3_file,
                            ExtraArgs={"ContentType": mimetypes.MimeTypes().guess_type(s3_file)[0]})
@@ -34,7 +34,7 @@ def getImg():
     # prepare a cursor object using cursor() method
     cursor = db.cursor()
     # Prepare SQL query to INSERT a record into the database.
-    sqlSelect = "SELECT MAX(FOLDER) FROM metaimage"
+    sqlSelect = "SELECT MAX(FOLDER) FROM metavideo"
     try:
         cursor.execute(sqlSelect)
         i = cursor.fetchall()
@@ -44,12 +44,12 @@ def getImg():
     # disconnect from server
     db.close()
     if i[0][0] == 0:
-        directory = "images"
+        directory = "video"
     else:
         s = i[0][0]
-        directory = "images" + str(s)
-    images = os.listdir(directory)
-    for img in images:
-        if upload_to_aws(directory + "/" + img, 'imagesformturk', directory + "/" + img):
-            uploaded.append("https://imagesformturk.s3.eu-central-1.amazonaws.com/" + directory + "/" + img)
+        directory = "video" + str(s)
+    videos = os.listdir(directory)
+    for vid in videos:
+        if upload_to_aws(directory + "/" + vid, 'videosformturk', directory + "/" + vid):
+            uploaded.append("https://imagesformturk.s3.eu-central-1.amazonaws.com/" + directory + "/" + vid)
     return uploaded

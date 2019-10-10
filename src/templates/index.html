@@ -4,13 +4,31 @@
     <meta charset="UTF-8">
     <title>AppForMTurk</title>
 </head>
+<link
+        rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+    body {
+        font-family: Arial;
+        margin: 10px 10px 10px 10px;
+        padding: 0;
+        color: white;
+        text-align: center;
+        background: #555652;
+    }
+</style>
 <body>
-<h3>Welcome to MTurkApp</h3>
-<div>
+<div style="text-align: center;">
+    <h1>Welcome to MTurkApp</h1>
+</div>
+<div style="text-align: center; padding: 10px;">
     <p>Please make your first new task!</p>
-        <button style="font-size:16px" onclick="window.location.href='/upload'" class="btn btn-secondary" type="submit">
-            Create Task
-        </button>
+    <button style="font-size:16px" onclick="window.location.href='/upload'" class="btn btn-secondary" type="submit">Create Task <i
+            class="fa fa-plus"></i>
+    </button>
 </div>
 </body>
 </html>

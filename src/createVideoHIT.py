@@ -1,5 +1,5 @@
 import boto3
-from src import imageManager, Key
+from src import videoManager, Key
 import time
 import pymysql
 
@@ -20,26 +20,26 @@ def execute():
                           aws_secret_access_key=aws_secret_access_key,
                           )
     # Se si creano Hit aggiuntive mettere a True questa variabile
-    images = imageManager.getImg()
+    videos = videoManager.getVid()
     i = 0
-    for img in images:
+    for vid in videos:
         i += 1
         if (i % 500) == 0:
             print 'Sleep for one minute'
             time.sleep(60)
         response = client.create_hit_with_hit_type(
-            HITLayoutId=Key.getHITLayoutIdIMG(),
-            HITTypeId=Key.getHITTypeIdIMG(),
+            HITLayoutId=Key.getHITLayoutIdVID(),
+            HITTypeId=Key.getHITTypeIdVID(),
             HITLayoutParameters=[
                 {
-                    'Name': 'img',
-                    'Value': img
+                    'Name': 'vid',
+                    'Value': vid
                 }, ],
             # Quanto resta disponibile una HIT a tutti i Workers, non il timer dopo aver accettato.
             LifetimeInSeconds=60,
             MaxAssignments=5,
         )
-        print str(i) + ')  ' + 'Created HIT for ' + img
+        print str(i) + ')  ' + 'Created HIT for ' + vid
         # The response included several fields that will be helpful later
         hit_type_id = response['HIT']['HITTypeId']
         hit_id = response['HIT']['HITId']
@@ -47,9 +47,9 @@ def execute():
         # prepare a cursor object using cursor() method
         cursor = db.cursor()
         # Prepare SQL query to INSERT a record into the database.
-        sqlInsert = "INSERT INTO `imagefile`(HIT_ID, IMAGE_FILE)VALUES" \
+        sqlInsert = "INSERT INTO `videofile`(HIT_ID, VIDEO_FILE)VALUES" \
                     "('%s', '%s')" \
-                    % (hit_id, img)
+                    % (hit_id, vid)
         try:
             cursor.execute(sqlInsert)
             # Commit your changes in the database
