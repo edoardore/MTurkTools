@@ -33,12 +33,12 @@
 
 <body>
 <div class="container">
-    <h1>EVALUATION HISTORY OF SINGLE FILE</h1>
+    <h1>EVALUATION HISTORY OF SINGLE WORKER</h1>
 </div>
-<form id="chartFilePost" action="{{ url_for('chartFileP') }}" method="POST">
+<form id="chartWorkerPost" action="{{ url_for('chartWorkerP') }}" method="POST">
     <div class="container">
-        <select class="custom-select" name="file" id="select_file" onclick="selected()">
-            <option selected value="">Choose File...</option>
+        <select class="custom-select" name="worker_id" id="select_worker" onclick="selected()">
+            <option selected value="">Choose WorkerID...</option>
             {% for select in result %}
             <option value="{{select[0]}}">{{select[0]}}</option>
             {% endfor %}
@@ -101,7 +101,7 @@
                 title: {
                     display: true,
                     position: 'bottom',
-                        text: '{{file}}' + ' History',
+                    text: '{{worker}}' + ' History',
                     fontColor: 'rgba(255,249,255,0.5)',
                     fontSize: 16,
                 }
@@ -137,17 +137,16 @@
                 border-radius: 50%;
             }
         </style>
+        <a href="/chartFile" class="previous round">&#8249;</a>
 
-        <a href="/age" class="previous round">&#8249;</a>
-
-        <button style="font-size:16px" onclick="window.location.href='/dashboardnp'" class="btn btn-secondary">Dashboard
-            <i
+        <button style="font-size:16px" onclick="window.location.href='/dashboardnp'" class="btn btn-secondary">Dashboard <i
                     class="fa fa-dashboard"></i>
         </button>
 
-        <a href="/chartWorker" class="next round">&#8250;</a>
+        <a href="radar.php" class="next round">&#8250;</a>
 
     </div>
 </div>
+
 </body>
 </html>
