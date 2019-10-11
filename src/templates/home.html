@@ -28,266 +28,77 @@
 
 <div align="center" style="padding: 20px;">
     <table>
+        {% if label[0]!='' %}
         <tr>
             <td style="text-align: center">
                 IMAGE TASKS
             </td>
         </tr>
+        {% endif %}
+        {%for i in range(0,100)%}
+        {% if label[i]!='' %}
         <tr>
-            <td>{{label0}}</td>
+            <td>{{label[i]}}</td>
             <td>
-                <form id="home-form0" action="{{ url_for('homepost') }}" method="POST" enctype="multipart/form-data">
+                <form id="home-form{{i}}" action="{{ url_for('homepost') }}" method="POST"
+                      enctype="multipart/form-data">
                     <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
-                            class="btn btn-secondary" name="button" value='0' onclick="setValue(0)">
+                            class="btn btn-secondary" name="button" value='{{i}}'>
                         Refresh
                         <i class="fa fa-refresh"></i>
                     </button>
                 </form>
             </td>
             <td>
-                <button style="font-size:16px" onclick="window.location.href='/dashboard'"
-                        class="btn btn-secondary" name="dashboard">
-                    Dashboard
-                    <i
-                            class="fa fa-dashboard"></i>
-                </button>
-            </td>
-        </tr>
-
-        <tr>
-            <td>{{label1}}</td>
-            <td>
-                <form id="home-form1" action="{{ url_for('homepost') }}" method="POST" enctype="multipart/form-data">
-                    <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
-                            class="btn btn-secondary" name="button" value='1'>
-                        Refresh
-                        <i class="fa fa-refresh"></i>
+                <form id="home-form{{i }}" action="{{ url_for('dashboard') }}" method="POST"
+                      enctype="multipart/form-data">
+                    <button style="font-size:16px" onclick="window.location.href='/dashboard'"
+                            class="btn btn-secondary" name="dashboard" value="{{i}}">
+                        Dashboard
+                        <i
+                                class="fa fa-dashboard"></i>
                     </button>
                 </form>
             </td>
-            <td>
-                <button style="font-size:16px" onclick="window.location.href='/dashboard'"
-                        class="btn btn-secondary" name="dashboard">
-                    Dashboard
-                    <i
-                            class="fa fa-dashboard"></i>
-                </button>
-            </td>
         </tr>
-
-        <tr>
-            <td>{{label2}}</td>
-            <td>
-                <form id="home-form2" action="{{ url_for('homepost') }}" method="POST" enctype="multipart/form-data">
-                    <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
-                            class="btn btn-secondary" name="button" value='2'>
-                        Refresh
-                        <i class="fa fa-refresh"></i>
-                    </button>
-                </form>
-            </td>
-            <td>
-                <button style="font-size:16px" onclick="window.location.href='/dashboard'"
-                        class="btn btn-secondary" name="dashboard">
-                    Dashboard
-                    <i
-                            class="fa fa-dashboard"></i>
-                </button>
-            </td>
-        </tr>
-
-        <tr>
-            <td>{{label3}}</td>
-            <td>
-                <form id="home-form3" action="{{ url_for('homepost') }}" method="POST" enctype="multipart/form-data">
-                    <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
-                            class="btn btn-secondary" name="button" value='3'>
-                        Refresh
-                        <i class="fa fa-refresh"></i>
-                    </button>
-                </form>
-            </td>
-            <td>
-                <button style="font-size:16px" onclick="window.location.href='/dashboard'"
-                        class="btn btn-secondary" name="dashboard">
-                    Dashboard
-                    <i
-                            class="fa fa-dashboard"></i>
-                </button>
-            </td>
-        </tr>
-
-        <tr>
-            <td>{{label4}}</td>
-            <td>
-                <form id="home-form4" action="{{ url_for('homepost') }}" method="POST" enctype="multipart/form-data">
-                    <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
-                            class="btn btn-secondary" name="button" value='4'>
-                        Refresh
-                        <i class="fa fa-refresh"></i>
-                    </button>
-                </form>
-            </td>
-            <td>
-                <button style="font-size:16px" onclick="window.location.href='/dashboard'"
-                        class="btn btn-secondary" name="dashboard">
-                    Dashboard
-                    <i
-                            class="fa fa-dashboard"></i>
-                </button>
-            </td>
-        </tr>
-        <tr>
-            <td>{{label5}}</td>
-            <td>
-                <form id="home-form5" action="{{ url_for('homepost') }}" method="POST" enctype="multipart/form-data">
-                    <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
-                            class="btn btn-secondary" name="button" value='5'>
-                        Refresh
-                        <i class="fa fa-refresh"></i>
-                    </button>
-                </form>
-            </td>
-            <td>
-                <button style="font-size:16px" onclick="window.location.href='/dashboard'"
-                        class="btn btn-secondary" name="dashboard">
-                    Dashboard
-                    <i
-                            class="fa fa-dashboard"></i>
-                </button>
-            </td>
-        </tr>
+        {% endif %}
+        {% endfor %}
+        {% if label[100]!='' %}
         <tr>
             <td style="text-align: center">
                 VIDEO TASKS
             </td>
         </tr>
-
+        {% endif %}
+        {%for i in range(100,200)%}
+        {% if label[i]!='' %}
         <tr>
-            <td>{{label6}}</td>
+            <td>{{label[i]}}</td>
             <td>
-                <form id="home-form6" action="{{ url_for('homepost') }}" method="POST" enctype="multipart/form-data">
+                <form id="home-form{{ i }}" action="{{ url_for('homepost') }}" method="POST"
+                      enctype="multipart/form-data">
                     <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
-                            class="btn btn-secondary" name="button" value='6' onclick="setValue(0)">
+                            class="btn btn-secondary" name="button" value='{{i}}'>
                         Refresh
                         <i class="fa fa-refresh"></i>
                     </button>
                 </form>
             </td>
             <td>
-                <button style="font-size:16px" onclick="window.location.href='/dashboard'"
-                        class="btn btn-secondary" name="dashboard">
-                    Dashboard
-                    <i
-                            class="fa fa-dashboard"></i>
-                </button>
-            </td>
-        </tr>
-        <tr>
-            <td>{{label7}}</td>
-            <td>
-                <form id="home-form7" action="{{ url_for('homepost') }}" method="POST" enctype="multipart/form-data">
-                    <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
-                            class="btn btn-secondary" name="button" value='7'>
-                        Refresh
-                        <i class="fa fa-refresh"></i>
+                <form id="home-form{{ i}}" action="{{ url_for('dashboard') }}" method="POST"
+                      enctype="multipart/form-data">
+                    <button style="font-size:16px" onclick="window.location.href='/dashboard'"
+                            class="btn btn-secondary" name="dashboard" type="submit" value="{{i}}">
+                        Dashboard
+                        <i
+                                class="fa fa-dashboard"></i>
                     </button>
                 </form>
             </td>
-            <td>
-                <button style="font-size:16px" onclick="window.location.href='/dashboard'"
-                        class="btn btn-secondary" name="dashboard">
-                    Dashboard
-                    <i
-                            class="fa fa-dashboard"></i>
-                </button>
-            </td>
         </tr>
-
-        <tr>
-            <td>{{label8}}</td>
-            <td>
-                <form id="home-form8" action="{{ url_for('homepost') }}" method="POST" enctype="multipart/form-data">
-                    <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
-                            class="btn btn-secondary" name="button" value='8'>
-                        Refresh
-                        <i class="fa fa-refresh"></i>
-                    </button>
-                </form>
-            </td>
-            <td>
-                <button style="font-size:16px" onclick="window.location.href='/dashboard'"
-                        class="btn btn-secondary" name="dashboard">
-                    Dashboard
-                    <i
-                            class="fa fa-dashboard"></i>
-                </button>
-            </td>
-        </tr>
-
-        <tr>
-            <td>{{label9}}</td>
-            <td>
-                <form id="home-form9" action="{{ url_for('homepost') }}" method="POST" enctype="multipart/form-data">
-                    <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
-                            class="btn btn-secondary" name="button" value='9'>
-                        Refresh
-                        <i class="fa fa-refresh"></i>
-                    </button>
-                </form>
-            </td>
-            <td>
-                <button style="font-size:16px" onclick="window.location.href='/dashboard'"
-                        class="btn btn-secondary" name="dashboard">
-                    Dashboard
-                    <i
-                            class="fa fa-dashboard"></i>
-                </button>
-            </td>
-        </tr>
-
-        <tr>
-            <td>{{label10}}</td>
-            <td>
-                <form id="home-form10" action="{{ url_for('homepost') }}" method="POST" enctype="multipart/form-data">
-                    <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
-                            class="btn btn-secondary" name="button" value='10'>
-                        Refresh
-                        <i class="fa fa-refresh"></i>
-                    </button>
-                </form>
-            </td>
-            <td>
-                <button style="font-size:16px" onclick="window.location.href='/dashboard'"
-                        class="btn btn-secondary" name="dashboard">
-                    Dashboard
-                    <i
-                            class="fa fa-dashboard"></i>
-                </button>
-            </td>
-        </tr>
-        <tr>
-            <td>{{label11}}</td>
-            <td>
-                <form id="home-form11" action="{{ url_for('homepost') }}" method="POST" enctype="multipart/form-data">
-                    <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
-                            class="btn btn-secondary" name="button" value='11'>
-                        Refresh
-                        <i class="fa fa-refresh"></i>
-                    </button>
-                </form>
-            </td>
-            <td>
-                <button style="font-size:16px" onclick="window.location.href='/dashboard'"
-                        class="btn btn-secondary" name="dashboard">
-                    Dashboard
-                    <i
-                            class="fa fa-dashboard"></i>
-                </button>
-            </td>
-        </tr>
+        {% endif %}
+        {% endfor %}
     </table>
-    </form>
 </div>
 
 

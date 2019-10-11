@@ -10,6 +10,8 @@ __author__ = 'Edoardo Re'
 
 app = Flask(__name__)
 
+app.secret_key = "super secret key"
+
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -176,19 +178,17 @@ def home():
     # disconnect from server
     db.close()
     result = []
-    for i in range(0, 12):
+    for i in range(0, 200):
         result.append('')
     i = 0
     for description in resultimage:
         result[i] = description[0]
         i += 1
-    i = 6
+    i = 100
     for description in resultvideo:
         result[i] = description[0]
         i += 1
-    return render_template("home.html", label0=result[0], label1=result[1], label2=result[2],
-                           label3=result[3], label4=result[4], label5=result[5], label6=result[6], label7=result[7],
-                           label8=result[8], label9=result[9], label10=result[10], label11=result[11])
+    return render_template("home.html", label=result)
 
 
 @app.route("/homepost", methods=['POST'])
@@ -197,7 +197,6 @@ def homepost():
     db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
     # prepare a cursor object using cursor() method
     cursor = db.cursor()
-    # Prepare SQL query to INSERT a record into the database.
     sqlSelect = "SELECT DESCRIPTION FROM metaimage"
     sqlSelect2 = "SELECT DESCRIPTION FROM metavideo"
     try:
@@ -211,35 +210,122 @@ def homepost():
     # disconnect from server
     db.close()
     result = []
-    for i in range(0, 12):
+    for i in range(0, 200):
         result.append('')
     i = 0
     for description in resultimage:
         result[i] = description[0]
         i += 1
-    i = 6
+    i = 100
     for description in resultvideo:
         result[i] = description[0]
         i += 1
     refreshButtonNumber = int(refreshButtonNumber)
-    if refreshButtonNumber < 6 and refreshButtonNumber >= 0:
+    if refreshButtonNumber < 100 and refreshButtonNumber >= 0:
         percent = str(resultsImm.execute(refreshButtonNumber)) + '% of the Task completed by Workers'
-    elif refreshButtonNumber >= 6 and refreshButtonNumber < 12:
-        percent = str(resultsVid.execute(refreshButtonNumber - 6)) + '% of the Task completed by Workers'
-
-    return render_template("home.html", label0=result[0], label1=result[1], label2=result[2],
-                           label3=result[3], label4=result[4], label5=result[5], label6=result[6], label7=result[7],
-                           label8=result[8], label9=result[9], label10=result[10], label11=result[11], percent=percent)
+    elif refreshButtonNumber >= 100 and refreshButtonNumber < 200:
+        percent = str(resultsVid.execute(refreshButtonNumber - 100)) + '% of the Task completed by Workers'
+    return render_template("home.html", label=result, percent=percent)
 
 
-@app.route("/dashboard")
+@app.route("/dashboard", methods=["POST"])
 def dashboard():
+    session['dashboard'] = request.form['dashboard']
+    return render_template("dashboard.html")
+
+
+@app.route('/dashboardnp')
+def dashboardnp():
     return render_template("dashboard.html")
 
 
 @app.route("/chartFile")
 def chartFile():
-    return render_template("chartFile.html")
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT IMAGE_FILE FROM `imagefile` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT VIDEO_FILE FROM `videofile` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    return render_template("chartFile.html", result=result, data1='0', data2='0')
+
+
+@app.route('/chartFileP', methods=['POST'])
+def chartFileP():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        imm = request.form['file']
+        imm = str(imm)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT QUALITY, WORKER_ID FROM `submitted` AS s, `imagefile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND IMAGE_FILE='%s'" % (
+            numDashboard, imm)
+        sqlSelect2 = "SELECT DISTINCT IMAGE_FILE FROM `imagefile` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result1 = cursor.fetchall()
+            cursor.execute(sqlSelect2)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        vid = request.form['file']
+        vid = str(vid)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect2 = "SELECT QUALITY, WORKER_ID FROM `submitted` AS s, `videofile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND VIDEO_FILE='%s'" % (
+            numDashboard, vid)
+        sqlSelect = "SELECT DISTINCT VIDEO_FILE FROM `videofile` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+            cursor.execute(sqlSelect2)
+            result1 = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    quality = []
+    worker = []
+    for tuple in result1:
+        quality.append(tuple[0])
+        worker.append(str(tuple[1]))
+    return render_template("chartFile.html", result=result, data1=quality, data2=worker)
 
 
 @app.route("/chartFile", methods=["POST"])

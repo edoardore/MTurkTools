@@ -35,25 +35,13 @@
 <div class="container">
     <h1>EVALUATION HISTORY OF SINGLE FILE</h1>
 </div>
-<form method="post" id="form">
-    <div class="btn-group btn-group-toggle container" data-toggle="buttons">
-        <label class="btn btn-secondary">
-            <input type="radio" name="db" id="option1" autocomplete="off"
-                   onclick="document.getElementById('form').submit();" value="Video"> Video
-        </label>
-        <label class="btn btn-secondary">
-            <input type="radio" name="db" id="option2" autocomplete="off"
-                   onclick="document.getElementById('form').submit();" value="Image"> Image
-        </label>
-    </div>
-</form>
-<form method="post">
+<form id="chartFilePost" action="{{ url_for('chartFileP') }}" method="POST">
     <div class="container">
         <select class="custom-select" name="file" id="select_file" onclick="selected()">
             <option selected value="">Choose File...</option>
-            <?php while ($row = mysqli_fetch_array($result1)):; ?>
-                <option value="<?php echo $row[0] ?>"><?php echo $row[0] ?></option>
-            <?php endwhile; ?>
+            {% for select in result %}
+            <option value="{{select[0]}}">{{select[0]}}</option>
+            {% endfor %}
         </select>
     </div>
     <div class="container">
@@ -72,7 +60,9 @@
     <script>
         var ctx = document.getElementById("chart").getContext('2d');
         var sum = 0;
-        var data1 = [<?php echo $data1; ?>];
+        var data1 = [{% for item in data1 %}
+                        {{item}},
+                        {% endfor %}];
         for (var i = 0; i < data1.length; i++) {
             sum += parseInt(data1[i], 10);
         }
@@ -84,7 +74,9 @@
         var myChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: [<?php echo $data2?>],
+                labels: [{% for item in data2 %}
+                            "{{item}}",
+                                {% endfor %}],
                 datasets:
                     [{
                         label: 'Quality',
@@ -109,7 +101,6 @@
                 title: {
                     display: true,
                     position: 'bottom',
-                    text: '<?php echo $file;?>' + ' History',
                     fontColor: 'rgba(255,249,255,0.5)',
                     fontSize: 16,
                 }
@@ -145,14 +136,15 @@
                 border-radius: 50%;
             }
         </style>
-        <a href="age.php" class="previous round">&#8249;</a>
 
-        <button style="font-size:16px" onclick="window.location.href='/Chart'" class="btn btn-secondary">Dashboard
+        <a href="/age" class="previous round">&#8249;</a>
+
+        <button style="font-size:16px" onclick="window.location.href='/dashboardnp'" class="btn btn-secondary">Dashboard
             <i
                     class="fa fa-dashboard"></i>
         </button>
 
-        <a href="chartWorker.php" class="next round">&#8250;</a>
+        <a href="/chartWorker" class="next round">&#8250;</a>
 
     </div>
 </div>

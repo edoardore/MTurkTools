@@ -1,11 +1,11 @@
 # CHIAVI DEL REQUESTER: per ottenerle seguire la guida
 # https://blog.mturk.com/how-to-use-iam-to-control-api-access-to-your-mturk-account-76fe2c2e66e2
 def getAws_access_key_id():
-    return 'AKIAR6AXQDP6J57D3NJT'
+    return 'AKIAR6AXQDP6GE2RS7JX'
 
 
 def getAws_secret_access_key():
-    return 'tVsCM3e2Fg/2zpvzN0d9R+98d2rgSabnP1iP55B5'
+    return 'go6bvzuPQETVtVeAsX9C5SLUbMjI7kRfUSOu5X71'
 
 
 # ----------------------------------------------------------------------------------------------
