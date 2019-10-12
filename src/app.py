@@ -753,8 +753,45 @@ def sexChart():
 
 @app.route('/sexChartP', methods=['POST'])
 def sexChartP():
-    return render_template("sexChart.html", data1='0', sex='')
-
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    sex = request.form['sex']
+    sex = str(sex)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT QUALITY FROM `submitted` AS s, `imagefile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND SEX='%s'" % (
+            numDashboard, sex)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT QUALITY FROM `submitted` AS s, `videofile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND SEX='%s'" % (
+            numDashboard, sex)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    quality = []
+    for tuple in result:
+        quality.append(tuple[0])
+    return render_template("sexChart.html", data1=quality, sex=sex)
 
 
 if __name__ == "__main__":
