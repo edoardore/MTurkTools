@@ -15,6 +15,7 @@
     div {
         text-align: center;
         padding: 10px;
+
     }
 
     body {
@@ -31,33 +32,36 @@
 <form id="upload-form" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
 
     <div class="btn-group btn-group-toggle container" data-toggle="buttons">
-        <label class="btn btn-secondary">
+        <label class="btn btn-dark">
             <input type="radio" name="type" id="option1" autocomplete="off" value="Video"
                    onclick="selected('Video')"> Video
         </label>
-        <label class="btn btn-secondary">
+        <label class="btn btn-dark">
             <input type="radio" name="type" id="option2" autocomplete="off" value="Image"
                    onclick="selected('Image')"> Image
         </label>
     </div>
 
-
     <div>
-        <strong>Files:</strong><br>
-        <input id="file-picker" type="file" name="file" accept="image/*" multiple>
+        <strong>Files: <i class="fa fa-file"></i>
+        </strong><br>
+        <input id="file-picker" type="file" class="btn btn-light" name="file"  multiple>
     </div>
     <div id="msg"></div>
     <div>
         <textarea rows="4" cols="50" name="description" form="upload-form">Enter description here...</textarea>
     </div>
     <div>
-        <input type="submit" value="Upload!" id="upload-button">
+        <button style="font-size:16px" class="btn btn-light" type="submit" value="Upload">Upload <i
+                class="fa fa-upload"></i>
+        </button>
     </div>
 </form>
 
 <div>
-    <button style="font-size:16px" onclick="window.location.href='/home'" class="btn btn-secondary" type="submit">Home <i
-            class="fa fa-home"></i>
+    <button style="font-size:16px" onclick="window.location.href='/home'" class="btn btn-dark" type="submit">Home
+        <i
+                class="fa fa-home"></i>
     </button>
 </div>
 

@@ -42,7 +42,7 @@ def execute():
                     'Value': img
                 }, ],
             # Quanto resta disponibile una HIT a tutti i Workers, non il timer dopo aver accettato.
-            LifetimeInSeconds=60,
+            LifetimeInSeconds=60*10,
             MaxAssignments=5,
         )
         print str(i) + ')  ' + 'Created HIT for ' + img

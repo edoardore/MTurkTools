@@ -27,10 +27,10 @@
 </style>
 
 <div align="center" style="padding: 20px;">
-    <table>
+    <table class="table table-striped table-dark table-borderless">
         {% if label[0]!='' %}
         <tr>
-            <td style="text-align: center">
+            <td style="text-align: center" colspan="3">
                 IMAGE TASKS
             </td>
         </tr>
@@ -39,17 +39,17 @@
         {% if label[i]!='' %}
         <tr>
             <td>{{label[i]}}</td>
-            <td>
+            <td style="text-align: right">
                 <form id="home-form{{i}}" action="{{ url_for('homepost') }}" method="POST"
                       enctype="multipart/form-data">
-                    <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
+                    <button style="font-size:16px" type="submit"
                             class="btn btn-secondary" name="button" value='{{i}}'>
                         Refresh
                         <i class="fa fa-refresh"></i>
                     </button>
                 </form>
             </td>
-            <td>
+            <td style="text-align: right">
                 <form id="home-form{{i }}" action="{{ url_for('dashboard') }}" method="POST"
                       enctype="multipart/form-data">
                     <button style="font-size:16px" onclick="window.location.href='/dashboard'"
@@ -63,9 +63,10 @@
         </tr>
         {% endif %}
         {% endfor %}
+
         {% if label[100]!='' %}
         <tr>
-            <td style="text-align: center">
+            <td style="text-align: center" colspan="3">
                 VIDEO TASKS
             </td>
         </tr>
@@ -74,17 +75,17 @@
         {% if label[i]!='' %}
         <tr>
             <td>{{label[i]}}</td>
-            <td>
+            <td style="text-align: right">
                 <form id="home-form{{ i }}" action="{{ url_for('homepost') }}" method="POST"
                       enctype="multipart/form-data">
-                    <button style="font-size:16px" onclick="window.location.href='/home'" type="submit"
+                    <button style="font-size:16px"  type="submit"
                             class="btn btn-secondary" name="button" value='{{i}}'>
                         Refresh
                         <i class="fa fa-refresh"></i>
                     </button>
                 </form>
             </td>
-            <td>
+            <td style="text-align: right;">
                 <form id="home-form{{ i}}" action="{{ url_for('dashboard') }}" method="POST"
                       enctype="multipart/form-data">
                     <button style="font-size:16px" onclick="window.location.href='/dashboard'"
@@ -108,7 +109,15 @@
     </button>
 </div>
 <div>
-    <h2>{{percent}}</h2>
+    {% if percent!='' %}
+    <table class="table table-hover table-dark">
+        <tr>
+            <td>
+                <h3>{{percent}}</h3>
+            </td>
+        </tr>
+    </table>
+    {% endif %}
 </div>
 
 </body>
