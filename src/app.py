@@ -839,5 +839,48 @@ def resolution():
     return render_template("resolution.html", data1=resolution, file=file)
 
 
+@app.route('/age')
+def age():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT AGE FROM `submitted` AS s, `imagefile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' GROUP BY WORKER_ID" % (
+            numDashboard)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+        file = 'Image' + str(numDashboard)
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        file = 'Video' + str(numDashboard)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT AGE FROM `submitted` AS s, `videofile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' GROUP BY WORKER_ID" % (
+            numDashboard)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    age = []
+    for tuple in result:
+        age.append(tuple[0])
+    return render_template("age.html", data1=age, file=file)
+
+
 if __name__ == "__main__":
     app.run(port=4555, debug=True)
