@@ -747,9 +747,11 @@ def randomChart():
                 count.append(triple[1] + triple[2])
     return render_template("randomChart.html", data1=workerid, data2=count, file=typefile)
 
+
 @app.route('/sexChart')
 def sexChart():
     return render_template("sexChart.html", data1='0', sex='')
+
 
 @app.route('/sexChartP', methods=['POST'])
 def sexChartP():
@@ -792,6 +794,49 @@ def sexChartP():
     for tuple in result:
         quality.append(tuple[0])
     return render_template("sexChart.html", data1=quality, sex=sex)
+
+
+@app.route('/resolution')
+def resolution():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT RESOLUTION FROM `submitted` AS s, `imagefile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' GROUP BY WORKER_ID" % (
+            numDashboard)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+        file = 'Image' + str(numDashboard)
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        file = 'Video' + str(numDashboard)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT RESOLUTION FROM `submitted` AS s, `videofile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' GROUP BY WORKER_ID" % (
+            numDashboard)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    resolution = []
+    for tuple in result:
+        resolution.append(tuple[0])
+    return render_template("resolution.html", data1=resolution, file=file)
 
 
 if __name__ == "__main__":
