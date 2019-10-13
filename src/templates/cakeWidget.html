@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<link
+        rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.min.js"></script>
+    <title>Mechanical Turk HIT Results</title>
+
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            margin: 10px 10px 10px 10px;
+            padding: 0;
+            color: white;
+            text-align: center;
+            background: #555652;
+        }
+
+        .container {
+            color: #E8E9EB;
+            background: #222;
+            border: #555652 1px solid;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>EVALUATION OF SINGLE FILE</h1>
+</div>
+
+<form id="cakePost" action="{{ url_for('cakePWidget') }}" method="POST">
+    <div class="container">
+        <select class="custom-select" name="file" id="select_file" onclick="selected()">
+            <option selected value="">Choose File...</option>
+            {% for select in result %}
+            <option value="{{select[0]}}">{{select[0]}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="container">
+        <button type="submit" class="btn btn-secondary" disabled id="button">GET</button>
+    </div>
+    <script>
+        function selected() {
+            document.getElementById("button").disabled = false;
+        }
+    </script>
+</form>
+
+<div class="container">
+    <canvas id="chart"
+            style="width: 62%; height: 35vh; background: #222; border: 1px solid #555652; margin-top: 10px;"></canvas>
+    <script>
+        var ctx = document.getElementById("chart").getContext('2d');
+        var sum = 0;
+        var data1 = [{% for item in data1 %}
+                        {{item}},
+                        {% endfor %}];
+        var count = [];
+        for (var i = 0; i < 5; i++) {
+            count[i] = 0;
+        }
+        for (var j = 0; j < data1.length; j++) {
+            if (data1[j] < 20 && data1[j] >= 0) {
+                count[0] += 1;
+            }
+            if (data1[j] < 40 && data1[j] >= 20) {
+                count[1] += 1;
+            }
+            if (data1[j] < 60 && data1[j] >= 40) {
+                count[2] += 1;
+            }
+            if (data1[j] < 80 && data1[j] >= 60) {
+                count[3] += 1;
+            }
+            if (data1[j] <= 100 && data1[j] >= 80) {
+                count[4] += 1;
+            }
+        }
+        for (var k = 0; k < 5; k++) {
+            count[k] = Math.round(count[k] * 100 / data1.length);
+        }
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Bad', 'Poor', 'Fair', 'Good', 'Excellent'],
+                datasets:
+                    [{
+                        data: count,
+                        backgroundColor: ['rgb(255,34,0, 0.2)', 'rgba(255,117,0,0.2)', 'rgba(255,206,0,0.2)', 'rgba(156,255,0,0.2)', 'rgba(0,255,13,0.2)'],
+                        borderColor: ['rgb(255,34,0)', 'rgba(255,117,0)', 'rgba(255,206,0)', 'rgba(156,255,0)', 'rgba(0,255,13)'],
+                        borderWidth: 3
+                    }]
+            },
+            options: {
+                scales: {scales: {yAxes: [{beginAtZero: false}], xAxes: [{autoskip: true, maxTicketsLimit: 20}]}},
+                tooltips: {mode: 'index'},
+                legend: {display: true, position: 'top', labels: {fontColor: 'rgb(255,255,255)', fontSize: 16}},
+                title: {
+                    display: true,
+                    position: 'bottom',
+                    text: '{{file}}',
+                    fontColor: 'rgba(255,249,255,0.5)',
+                    fontSize: 16,
+                }
+            }
+
+        });
+    </script>
+</div>
+</body>
+</html>

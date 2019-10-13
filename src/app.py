@@ -330,6 +330,97 @@ def chartFileP():
     return render_template("chartFile.html", result=result, data1=quality, data2=worker, file=file)
 
 
+@app.route("/chartFileWidget")
+def chartFileWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT IMAGE_FILE FROM `imagefile` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT VIDEO_FILE FROM `videofile` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    return render_template("chartFileWidget.html", result=result, data1='0', data2='0')
+
+
+@app.route('/chartFilePWidget', methods=['POST'])
+def chartFilePWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        imm = request.form['file']
+        imm = str(imm)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT QUALITY, WORKER_ID FROM `submitted` AS s, `imagefile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND IMAGE_FILE='%s'" % (
+            numDashboard, imm)
+        sqlSelect2 = "SELECT DISTINCT IMAGE_FILE FROM `imagefile` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result1 = cursor.fetchall()
+            cursor.execute(sqlSelect2)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+        file = imm
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        vid = request.form['file']
+        vid = str(vid)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect2 = "SELECT QUALITY, WORKER_ID FROM `submitted` AS s, `videofile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND VIDEO_FILE='%s'" % (
+            numDashboard, vid)
+        sqlSelect = "SELECT DISTINCT VIDEO_FILE FROM `videofile` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+            cursor.execute(sqlSelect2)
+            result1 = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+        file = vid
+    quality = []
+    worker = []
+    for tuple in result1:
+        quality.append(tuple[0])
+        worker.append(str(tuple[1]))
+    return render_template("chartFileWidget.html", result=result, data1=quality, data2=worker, file=file)
+
+
 @app.route('/chartWorker')
 def chartWorker():
     numDashboard = session['dashboard']
@@ -415,6 +506,93 @@ def chartWorkerP():
         quality.append(tuple[0])
         file.append(str(tuple[1])[53:])
     return render_template("chartWorker.html", result=result, data1=quality, data2=file, worker=workerid)
+
+
+@app.route('/chartWorkerWidget')
+def chartWorkerWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT WORKER_ID FROM `submitted` AS s,`imagefile` AS i WHERE i.FOLDER='%s' AND s.HIT_ID=i.HIT_ID" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT WORKER_ID FROM `submitted` AS s,`videofile` AS i WHERE i.FOLDER='%s' AND s.HIT_ID=i.HIT_ID" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    return render_template("chartWorkerWidget.html", result=result, data1='0', data2='0')
+
+
+@app.route('/chartWorkerPWidget', methods=['POST'])
+def chartWorkerPWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    workerid = request.form['worker_id']
+    workerid = str(workerid)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect2 = "SELECT QUALITY, IMAGE_FILE FROM `submitted` AS s, `imagefile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND WORKER_ID='%s'" % (
+            numDashboard, workerid)
+        sqlSelect = "SELECT DISTINCT WORKER_ID FROM `submitted` AS s,`imagefile` AS i WHERE i.FOLDER='%s' AND s.HIT_ID=i.HIT_ID" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+            cursor.execute(sqlSelect2)
+            result1 = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect2 = "SELECT QUALITY, VIDEO_FILE FROM `submitted` AS s, `videofile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND WORKER_ID='%s'" % (
+            numDashboard, workerid)
+        sqlSelect = "SELECT DISTINCT WORKER_ID FROM `submitted` AS s,`videofile` AS i WHERE i.FOLDER='%s' AND s.HIT_ID=i.HIT_ID" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+            cursor.execute(sqlSelect2)
+            result1 = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    quality = []
+    file = []
+    for tuple in result1:
+        quality.append(tuple[0])
+        file.append(str(tuple[1])[53:])
+    return render_template("chartWorkerWidget.html", result=result, data1=quality, data2=file, worker=workerid)
 
 
 @app.route('/radar')
@@ -516,6 +694,105 @@ def radarP():
                            workerid2=workerid2)
 
 
+@app.route('/radarWidget')
+def radarWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT WORKER_ID FROM `submitted` AS s,`imagefile` AS i WHERE i.FOLDER='%s' AND s.HIT_ID=i.HIT_ID" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT WORKER_ID FROM `submitted` AS s,`videofile` AS i WHERE i.FOLDER='%s' AND s.HIT_ID=i.HIT_ID" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    return render_template("radarWidget.html", result=result, data1='0', data2='0')
+
+
+@app.route('/radarPWidget', methods=['POST'])
+def radarPWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    workerid1 = request.form['worker_id1']
+    workerid2 = request.form['worker_id2']
+    workerid1 = str(workerid1)
+    workerid2 = str(workerid2)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect2 = "SELECT QUALITY FROM `submitted` AS s, `imagefile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND WORKER_ID='%s'" % (
+            numDashboard, workerid1)
+        sqlSelect3 = "SELECT QUALITY FROM `submitted` AS s, `imagefile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND WORKER_ID='%s'" % (
+            numDashboard, workerid2)
+        sqlSelect = "SELECT DISTINCT WORKER_ID FROM `submitted` AS s,`imagefile` AS i WHERE i.FOLDER='%s' AND s.HIT_ID=i.HIT_ID" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+            cursor.execute(sqlSelect2)
+            result1 = cursor.fetchall()
+            cursor.execute(sqlSelect3)
+            result2 = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect2 = "SELECT QUALITY FROM `submitted` AS s, `videofile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND WORKER_ID='%s'" % (
+            numDashboard, workerid1)
+        sqlSelect3 = "SELECT QUALITY FROM `submitted` AS s, `videofile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND WORKER_ID='%s'" % (
+            numDashboard, workerid2)
+        sqlSelect = "SELECT DISTINCT WORKER_ID FROM `submitted` AS s,`videofile` AS i WHERE i.FOLDER='%s' AND s.HIT_ID=i.HIT_ID" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+            cursor.execute(sqlSelect2)
+            result1 = cursor.fetchall()
+            cursor.execute(sqlSelect3)
+            result2 = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    quality1 = []
+    for tuple in result1:
+        quality1.append(tuple[0])
+    quality2 = []
+    for tuple in result2:
+        quality2.append(tuple[0])
+    return render_template("radarWidget.html", result=result, data1=quality1, data2=quality2, workerid1=workerid1,
+                           workerid2=workerid2)
+
+
 @app.route("/cake")
 def cake():
     numDashboard = session['dashboard']
@@ -605,6 +882,95 @@ def cakeP():
     return render_template("cake.html", result=result, data1=quality, file=file)
 
 
+@app.route("/cakeWidget")
+def cakeWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT IMAGE_FILE FROM `imagefile` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT VIDEO_FILE FROM `videofile` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    return render_template("cakeWidget.html", result=result, data1='0', data2='0')
+
+
+@app.route('/cakePWidget', methods=['POST'])
+def cakePWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        imm = request.form['file']
+        imm = str(imm)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT QUALITY FROM `submitted` AS s, `imagefile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND IMAGE_FILE='%s'" % (
+            numDashboard, imm)
+        sqlSelect2 = "SELECT DISTINCT IMAGE_FILE FROM `imagefile` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result1 = cursor.fetchall()
+            cursor.execute(sqlSelect2)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+        file = imm
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        vid = request.form['file']
+        vid = str(vid)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect2 = "SELECT QUALITY FROM `submitted` AS s, `videofile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND VIDEO_FILE='%s'" % (
+            numDashboard, vid)
+        sqlSelect = "SELECT DISTINCT VIDEO_FILE FROM `videofile` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+            cursor.execute(sqlSelect2)
+            result1 = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+        file = vid
+    quality = []
+    for tuple in result1:
+        quality.append(tuple[0])
+    return render_template("cakeWidget.html", result=result, data1=quality, file=file)
+
+
 @app.route('/topUser')
 def topUser():
     numDashboard = session['dashboard']
@@ -648,6 +1014,51 @@ def topUser():
         workerid.append(str(tuple[0]))
         count.append(tuple[1])
     return render_template("topUser.html", data1=workerid, data2=count, file=typefile)
+
+
+@app.route('/topUserWidget')
+def topUserWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        typefile = 'Image' + str(numDashboard)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT WORKER_ID, COUNT(s.HIT_ID) AS NUM FROM `submitted` AS s, `imagefile` " \
+                    "AS i WHERE FOLDER='%s' AND i.HIT_ID=s.HIT_ID GROUP BY WORKER_ID ORDER BY NUM DESC" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        typefile = 'Video' + str(numDashboard)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT WORKER_ID, COUNT(s.HIT_ID) AS NUM FROM `submitted` AS s, `videofile` " \
+                    "AS i WHERE FOLDER='%s' AND i.HIT_ID=s.HIT_ID GROUP BY WORKER_ID ORDER BY NUM DESC" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    workerid = []
+    count = []
+    for tuple in result:
+        workerid.append(str(tuple[0]))
+        count.append(tuple[1])
+    return render_template("topUserWidget.html", data1=workerid, data2=count, file=typefile)
 
 
 @app.route('/scatter')
@@ -695,6 +1106,53 @@ def scatter():
         count.append(triple[1])
         average.append(triple[2])
     return render_template("scatter.html", data1=workerid, data2=count, data3=average, file=typefile)
+
+
+@app.route('/scatterWidget')
+def scatterWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        typefile = 'Image' + str(numDashboard)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT WORKER_ID, COUNT(s.HIT_ID) AS NUM, AVG(QUALITY) AS AVERAGE FROM `submitted` AS s, `imagefile` " \
+                    "AS i WHERE FOLDER='%s' AND i.HIT_ID=s.HIT_ID GROUP BY WORKER_ID ORDER BY NUM DESC" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        typefile = 'Video' + str(numDashboard)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT WORKER_ID, COUNT(s.HIT_ID) AS NUM, AVG(QUALITY) AS AVERAGE FROM `submitted` AS s, `videofile` " \
+                    "AS i WHERE FOLDER='%s' AND i.HIT_ID=s.HIT_ID GROUP BY WORKER_ID ORDER BY NUM DESC" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    workerid = []
+    count = []
+    average = []
+    for triple in result:
+        workerid.append(str(triple[0]))
+        count.append(triple[1])
+        average.append(triple[2])
+    return render_template("scatterWidget.html", data1=workerid, data2=count, data3=average, file=typefile)
 
 
 @app.route('/randomChart')
@@ -748,6 +1206,57 @@ def randomChart():
     return render_template("randomChart.html", data1=workerid, data2=count, file=typefile)
 
 
+@app.route('/randomChartWidget')
+def randomChartWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        typefile = 'Image' + str(numDashboard)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT WORKER_ID, COUNT(DISTINCT SEX) AS COUNTSEX, COUNT(DISTINCT AGE) AS COUNTAGE" \
+                    " FROM `submitted` AS s, `imagefile` AS i WHERE FOLDER='%s' AND s.HIT_ID=i.HIT_ID GROUP BY WORKER_ID ORDER BY COUNTAGE DESC, COUNTSEX" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        typefile = 'Video' + str(numDashboard)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DISTINCT WORKER_ID, COUNT(DISTINCT SEX) AS COUNTSEX, COUNT(DISTINCT AGE) AS COUNTAGE" \
+                    " FROM `submitted` AS s, `videofile` AS i WHERE FOLDER='%s' AND s.HIT_ID=i.HIT_ID GROUP BY WORKER_ID ORDER BY COUNTAGE DESC, COUNTSEX" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    workerid = []
+    count = []
+    for triple in result:
+        if (triple[1] > 1 or triple[2] > 1):
+            workerid.append(str(triple[0]))
+            if triple[1] == 1:
+                count.append(triple[2])
+            elif triple[2] == 1:
+                count.append(triple[1])
+            else:
+                count.append(triple[1] + triple[2])
+    return render_template("randomChartWidget.html", data1=workerid, data2=count, file=typefile)
+
+
 @app.route('/sexChart')
 def sexChart():
     return render_template("sexChart.html", data1='0', sex='')
@@ -796,6 +1305,54 @@ def sexChartP():
     return render_template("sexChart.html", data1=quality, sex=sex)
 
 
+@app.route('/sexChartWidget')
+def sexChartWidget():
+    return render_template("sexChartWidget.html", data1='0', sex='')
+
+
+@app.route('/sexChartPWidget', methods=['POST'])
+def sexChartPWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    sex = request.form['sex']
+    sex = str(sex)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT QUALITY FROM `submitted` AS s, `imagefile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND SEX='%s'" % (
+            numDashboard, sex)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT QUALITY FROM `submitted` AS s, `videofile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' AND SEX='%s'" % (
+            numDashboard, sex)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    quality = []
+    for tuple in result:
+        quality.append(tuple[0])
+    return render_template("sexChartWidget.html", data1=quality, sex=sex)
+
+
 @app.route('/resolution')
 def resolution():
     numDashboard = session['dashboard']
@@ -837,6 +1394,49 @@ def resolution():
     for tuple in result:
         resolution.append(tuple[0])
     return render_template("resolution.html", data1=resolution, file=file)
+
+
+@app.route('/resolutionWidget')
+def resolutionWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT RESOLUTION FROM `submitted` AS s, `imagefile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' GROUP BY WORKER_ID" % (
+            numDashboard)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+        file = 'Image' + str(numDashboard)
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        file = 'Video' + str(numDashboard)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT RESOLUTION FROM `submitted` AS s, `videofile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' GROUP BY WORKER_ID" % (
+            numDashboard)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    resolution = []
+    for tuple in result:
+        resolution.append(tuple[0])
+    return render_template("resolutionWidget.html", data1=resolution, file=file)
 
 
 @app.route('/age')
@@ -882,6 +1482,49 @@ def age():
     return render_template("age.html", data1=age, file=file)
 
 
+@app.route('/ageWidget')
+def ageWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT AGE FROM `submitted` AS s, `imagefile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' GROUP BY WORKER_ID" % (
+            numDashboard)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+        file = 'Image' + str(numDashboard)
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        file = 'Video' + str(numDashboard)
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT AGE FROM `submitted` AS s, `videofile` AS i WHERE s.HIT_ID=i.HIT_ID AND FOLDER='%s' GROUP BY WORKER_ID" % (
+            numDashboard)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    age = []
+    for tuple in result:
+        age.append(tuple[0])
+    return render_template("ageWidget.html", data1=age, file=file)
+
+
 @app.route('/personal')
 def personal():
     session['sel1'] = 1
@@ -896,11 +1539,13 @@ def personal():
 
 @app.route('/personalp', methods=['POST'])
 def personalp():
-    button1=request.form['buttonone']
-    button2=request.form['buttontwo']
-    button3=request.form['buttonthree']
-    a=10
-
+    button = int(request.form['button'])
+    if button == 1:
+        session['sel1'] = (session['sel1'] + 1) % 10
+    if button == 2:
+        session['sel2'] = (session['sel2'] + 1) % 10
+    if button == 3:
+        session['sel3'] = (session['sel3'] + 1) % 10
     pages = ['/chartFileWidget', '/chartWorkerWidget', '/radarWidget', '/cakeWidget',
              '/topUserWidget', '/scatterWidget', '/randomChartWidget', '/sexChartWidget',
              '/resolutionWidget', '/ageWidget']
