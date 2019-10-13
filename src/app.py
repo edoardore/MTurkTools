@@ -882,5 +882,31 @@ def age():
     return render_template("age.html", data1=age, file=file)
 
 
+@app.route('/personal')
+def personal():
+    session['sel1'] = 1
+    session['sel2'] = 2
+    session['sel3'] = 3
+    pages = ['/chartFileWidget', '/chartWorkerWidget', '/radarWidget', '/cakeWidget',
+             '/topUserWidget', '/scatterWidget', '/randomChartWidget', '/sexChartWidget',
+             '/resolutionWidget', '/ageWidget']
+    return render_template('personal.html', page1=pages[session['sel1']], page2=pages[session['sel2']],
+                           page3=pages[session['sel3']])
+
+
+@app.route('/personalp', methods=['POST'])
+def personalp():
+    button1=request.form['buttonone']
+    button2=request.form['buttontwo']
+    button3=request.form['buttonthree']
+    a=10
+
+    pages = ['/chartFileWidget', '/chartWorkerWidget', '/radarWidget', '/cakeWidget',
+             '/topUserWidget', '/scatterWidget', '/randomChartWidget', '/sexChartWidget',
+             '/resolutionWidget', '/ageWidget']
+    return render_template('personal.html', page1=pages[session['sel1']], page2=pages[session['sel2']],
+                           page3=pages[session['sel3']])
+
+
 if __name__ == "__main__":
     app.run(port=4555, debug=True)
