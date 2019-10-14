@@ -9,3 +9,7 @@ Tool che permette la creazione di hit tramite iterfaccia grafica, utilizza il fr
 5) Dashboard disponibili per ogni task, ognuna di esse è personalizzata ed esegue queries solo su file del task selezionato.
 6) Possibilità di creare numerosi task e di analizzarne i risultati dopo la sottomissione da parte dei Workers.
 
+## License
+[Edoardo Re](https://github.com/edoardore), 2019
+
+[Chart.js](https://www.chartjs.org)
