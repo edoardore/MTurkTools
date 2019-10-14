@@ -103,4 +103,7 @@ def execute(folder):
         else:
             print 'Waiting minimum another ' + str(MinAssignments - numAssignmentSubmitted) + ' assignments'
         print ''
-    return submitted * 100 / totalLength
+    if totalLength != 0:
+        return submitted * 100 / totalLength
+    else:
+        return 0
