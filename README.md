@@ -21,7 +21,8 @@ Si mostrano 10 grafici riferiti al task scelto:
 8) Mostra risultati di soli Workers maschi o femmine. (Pie graph)
 9) Grafico con percentuale di risoluzione degli schermi dei Workers. (Bar graph)
 10) Grafico con distribuzione di età dei Workers. (Bar graph)
-11) Visione di 3 grafici a scelta fra quelli precedenti in contemporanea. (Modular)
+11) Grafico che mostra la media e varianza della valutazione di ogni immagine del Task. (Line graph)
+12) Visione di 3 grafici a scelta fra quelli precedenti in contemporanea. (Modular)
 
 ## License
 [Edoardo Re](https://github.com/edoardore), 2019
