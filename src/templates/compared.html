@@ -33,56 +33,69 @@
 
 <body>
 <div class="container">
-    <h1>AGE DISTRIBUTION</h1>
+    <h1>HISTORY OF TASK</h1>
 </div>
+
+
 <div class="container">
     <canvas id="chart"
-            style="width: 86%; height: 63vh; background: #222; border: 1px solid #555652; margin-top: 10px;"></canvas>
+            style="width: 48%; height: 35vh; background: #222; border: 1px solid #555652; margin-top: 10px;"></canvas>
     <script>
         var ctx = document.getElementById("chart").getContext('2d');
+        var sum = 0;
         var data1 = [{% for item in data1 %}
-                            "{{item}}",
-                                {% endfor %}];
-        var data = ['0-18', '19-39', '40-59', '60-100'];
-        var count = [];
-        for (var i = 0; i < 4; i++) {
-            count[i] = 0;
+                        {{item}},
+                        {% endfor %}];
+        var variance = [{% for item in data3 %}
+                        {{item}},
+                        {% endfor %}];
+        for (var i = 0; i < data1.length; i++) {
+            sum += parseInt(data1[i], 10);
         }
+        var singleavg = Math.round(sum / data1.length);
+        var avg = [];
         for (var j = 0; j < data1.length; j++) {
-            if (data1[j] === '0-18') {
-                count[0] += 1;
-            } else if (data1[j] === '19-39') {
-                count[1] += 1;
-            } else if (data1[j] === '40-59') {
-                count[2] += 1;
-            } else if (data1[j] === '60-100') {
-                count[3] += 1;
-            }
-        }
-        for (var k = 0; k < 4; k++) {
-            count[k] = Math.round(count[k] * 100 / data1.length);
+            avg.push(singleavg);
         }
         var myChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
-                labels: data,
+                labels: [{% for item in data2 %}
+                            "{{item}}",
+                                {% endfor %}],
                 datasets:
                     [{
-                        data: count,
-                        backgroundColor: 'rgb(255,242,0,0.2)',
-                        borderColor: 'rgb(255,242,0)',
-                        borderWidth: 1,
-                    }
+                        label: 'Average Quality',
+                        data: data1,
+                        backgroundColor: 'transparent',
+                        borderColor: 'rgb(255,34,0)',
+                        borderWidth: 3
+                    },
+                        {
+                            label: 'Total Average Of Task',
+                            data: avg,
+                            backgroundColor: 'transparent',
+                            borderColor: 'rgb(10,0,255)',
+                            borderWidth: 3,
+                        }
+                        ,
+                        {
+                            label: 'Variance',
+                            data: variance,
+                            backgroundColor: 'transparent',
+                            borderColor: 'rgb(255,0,255)',
+                            borderWidth: 3,
+                        }
                     ]
             },
             options: {
                 scales: {scales: {yAxes: [{beginAtZero: false}], xAxes: [{autoskip: true, maxTicketsLimit: 20}]}},
                 tooltips: {mode: 'index'},
-                legend: {display: false},
+                legend: {display: true, position: 'top', labels: {fontColor: 'rgb(255,255,255)', fontSize: 16}},
                 title: {
                     display: true,
                     position: 'bottom',
-                    text: '{{file}}' + ' Age Percentage',
+                        text: 'Task History',
                     fontColor: 'rgba(255,249,255,0.5)',
                     fontSize: 16,
                 }
@@ -118,17 +131,17 @@
                 border-radius: 50%;
             }
         </style>
-        <a href="/resolution" class="previous round">&#8249;</a>
+
+        <a href="/age" class="previous round">&#8249;</a>
 
         <button style="font-size:16px" onclick="window.location.href='/dashboardnp'" class="btn btn-secondary">Dashboard
             <i
                     class="fa fa-dashboard"></i>
         </button>
 
-        <a href="/compared" class="next round">&#8250;</a>
+        <a href="/chartFile" class="next round">&#8250;</a>
 
     </div>
 </div>
-
 </body>
 </html>

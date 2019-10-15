@@ -1532,7 +1532,7 @@ def personal():
     session['sel3'] = 3
     pages = ['/chartFileWidget', '/chartWorkerWidget', '/radarWidget', '/cakeWidget',
              '/topUserWidget', '/scatterWidget', '/randomChartWidget', '/sexChartWidget',
-             '/resolutionWidget', '/ageWidget']
+             '/resolutionWidget', '/ageWidget', '/comparedWidget']
     return render_template('personal.html', page1=pages[session['sel1']], page2=pages[session['sel2']],
                            page3=pages[session['sel3']])
 
@@ -1541,16 +1541,106 @@ def personal():
 def personalp():
     button = int(request.form['button'])
     if button == 1:
-        session['sel1'] = (session['sel1'] + 1) % 10
+        session['sel1'] = (session['sel1'] + 1) % 11
     if button == 2:
-        session['sel2'] = (session['sel2'] + 1) % 10
+        session['sel2'] = (session['sel2'] + 1) % 11
     if button == 3:
-        session['sel3'] = (session['sel3'] + 1) % 10
+        session['sel3'] = (session['sel3'] + 1) % 11
     pages = ['/chartFileWidget', '/chartWorkerWidget', '/radarWidget', '/cakeWidget',
              '/topUserWidget', '/scatterWidget', '/randomChartWidget', '/sexChartWidget',
-             '/resolutionWidget', '/ageWidget']
+             '/resolutionWidget', '/ageWidget', '/comparedWidget']
     return render_template('personal.html', page1=pages[session['sel1']], page2=pages[session['sel2']],
                            page3=pages[session['sel3']])
+
+
+@app.route('/compared')
+def compared():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT AVG(s.QUALITY), i.IMAGE_FILE, STD(s.quality) FROM `imagefile` AS i, `submitted` as s WHERE s.HIT_ID=i.HIT_ID AND i.FOLDER='%s' GROUP BY IMAGE_FILE" % (
+            numDashboard)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT AVG(s.QUALITY), i.VIDEO_FILE, STD(s.quality) FROM `videofile` AS i, `submitted` as s WHERE s.HIT_ID=i.HIT_ID AND i.FOLDER='%s' GROUP BY VIDEO_FILE" % (
+            numDashboard)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    quality = []
+    file = []
+    variance = []
+    for triple in result:
+        quality.append(triple[0])
+        file.append(triple[1][53:])
+        variance.append(triple[2])
+    return render_template('compared.html', data1=quality, data2=file, data3=variance)
+
+
+@app.route('/comparedWidget')
+def comparedWidget():
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT AVG(s.QUALITY), i.IMAGE_FILE, STD(s.quality) FROM `imagefile` AS i, `submitted` as s WHERE s.HIT_ID=i.HIT_ID AND i.FOLDER='%s' GROUP BY IMAGE_FILE" % (
+            numDashboard)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT AVG(s.QUALITY), i.VIDEO_FILE, STD(s.quality) FROM `videofile` AS i, `submitted` as s WHERE s.HIT_ID=i.HIT_ID AND i.FOLDER='%s' GROUP BY VIDEO_FILE" % (
+            numDashboard)
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    quality = []
+    file = []
+    variance = []
+    for triple in result:
+        quality.append(triple[0])
+        file.append(triple[1][53:])
+        variance.append(triple[2])
+    return render_template('comparedWidget.html', data1=quality, data2=file, data3=variance)
 
 
 if __name__ == "__main__":
