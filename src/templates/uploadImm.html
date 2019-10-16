@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<link
+        rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<head>
+    <title>Upload</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+</head>
+<body>
+
+<style>
+    div {
+        text-align: center;
+        padding: 10px;
+
+    }
+
+    body {
+        font-family: Arial;
+        margin: 10px 10px 10px 10px;
+        padding: 0;
+        color: white;
+        text-align: center;
+        background: #555652;
+    }
+</style>
+
+
+<form id="upload-form" action="{{ url_for('uploadImage') }}" method="POST" enctype="multipart/form-data">
+    <div>
+        <strong>Files: <i class="fa fa-file"></i>
+        </strong><br>
+        <input id="file-picker" type="file" class="btn btn-light" name="file" multiple>
+    </div>
+    <div id="msg"></div>
+    <div>
+        <textarea rows="4" cols="50" name="description" form="upload-form">Enter description here...</textarea>
+    </div>
+    <div>
+        <button style="font-size:16px" class="btn btn-light" type="submit" value="Upload">Upload <i
+                class="fa fa-upload"></i>
+        </button>
+    </div>
+</form>
+
+<div>
+    <button style="font-size:16px" onclick="window.location.href='/home'" class="btn btn-dark" type="submit">Home
+        <i
+                class="fa fa-home"></i>
+    </button>
+</div>
+
+</body>
+<script>
+
+    $("#file-picker").change(function () {
+        var input = document.getElementById('file-picker');
+        for (var i = 0; i < input.files.length; i++) {
+            var ext = input.files[i].name.substring(input.files[i].name.lastIndexOf('.') + 1).toLowerCase()
+
+            if ((ext == 'jpg') || (ext == 'png') || (ext == 'bmp')) {
+                $("#msg").text("Files are supported")
+            }
+            else {
+                $("#msg").text("Files are NOT supported")
+                document.getElementById("file-picker").value = "";
+            }
+        }
+    });
+
+</script>
+</html>

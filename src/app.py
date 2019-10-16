@@ -41,122 +41,126 @@ def start():
     db.close()
 
 
-@app.route("/upload")
-def up():
-    return render_template("upload.html")
+@app.route("/uploadImm")
+def uploadImm():
+    return render_template("uploadImm.html")
+
+@app.route("/uploadVid")
+def uploadVid():
+    return render_template("uploadVid.html")
+
+@app.route("/uploadImage", methods=["POST"])
+def uploadImage():
+    db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+    # prepare a cursor object using cursor() method
+    cursor = db.cursor()
+    # Prepare SQL query to INSERT a record into the database.
+    sqlSelect = "SELECT MAX(FOLDER) FROM metaimage"
+    try:
+        cursor.execute(sqlSelect)
+        i = cursor.fetchall()
+    except:
+        # Rollback in case there is any error
+        db.rollback()
+    # disconnect from server
+    db.close()
+    if i[0][0] == None:
+        s = ''
+        folder = 0
+    else:
+        s = i[0][0] + 1
+        folder = s
+    target = os.path.join(APP_ROOT, 'images' + str(s) + '/')
+    print(target)
+    if not os.path.isdir(target):
+        os.mkdir(target)
+    else:
+        print("Couldn't create upload directory: {}".format(target))
+    print(request.files.getlist("file"))
+    for upload in request.files.getlist("file"):
+        print(upload)
+        print("{} is the file name".format(upload.filename))
+        filename = upload.filename
+        destination = "/".join([target, filename])
+        print ("Accept incoming file:", filename)
+        print ("Save it to:", destination)
+        upload.save(destination)
+    description = request.form['description']
+    db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+    # prepare a cursor object using cursor() method
+    cursor = db.cursor()
+    # Prepare SQL query to INSERT a record into the database.
+    sqlInsert = "INSERT INTO metaimage(FOLDER, DESCRIPTION)VALUES" \
+                "('%s', '%s')" % (folder, description)
+    try:
+        # Execute the SQL command
+        cursor.execute(sqlInsert)
+        # Commit your changes in the database
+        db.commit()
+    except:
+        # Rollback in case there is any error
+        db.rollback()
+    # disconnect from server
+    db.close()
+    createImmHIT.execute()
+    return redirect(url_for('home'))
 
 
-@app.route("/upload", methods=["POST"])
-def upload():
-    type = request.form['type']
-    if type == 'Image':
-        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
-        # prepare a cursor object using cursor() method
-        cursor = db.cursor()
-        # Prepare SQL query to INSERT a record into the database.
-        sqlSelect = "SELECT MAX(FOLDER) FROM metaimage"
-        try:
-            cursor.execute(sqlSelect)
-            i = cursor.fetchall()
-        except:
-            # Rollback in case there is any error
-            db.rollback()
-        # disconnect from server
-        db.close()
-        if i[0][0] == None:
-            s = ''
-            folder = 0
-        else:
-            s = i[0][0] + 1
-            folder = s
-        target = os.path.join(APP_ROOT, 'images' + str(s) + '/')
-        print(target)
-        if not os.path.isdir(target):
-            os.mkdir(target)
-        else:
-            print("Couldn't create upload directory: {}".format(target))
-        print(request.files.getlist("file"))
-        for upload in request.files.getlist("file"):
-            print(upload)
-            print("{} is the file name".format(upload.filename))
-            filename = upload.filename
-            destination = "/".join([target, filename])
-            print ("Accept incoming file:", filename)
-            print ("Save it to:", destination)
-            upload.save(destination)
-        description = request.form['description']
-        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
-        # prepare a cursor object using cursor() method
-        cursor = db.cursor()
-        # Prepare SQL query to INSERT a record into the database.
-        sqlInsert = "INSERT INTO metaimage(FOLDER, DESCRIPTION)VALUES" \
-                    "('%s', '%s')" % (folder, description)
-        try:
-            # Execute the SQL command
-            cursor.execute(sqlInsert)
-            # Commit your changes in the database
-            db.commit()
-        except:
-            # Rollback in case there is any error
-            db.rollback()
-        # disconnect from server
-        db.close()
-        createImmHIT.execute()
-        return redirect(url_for('home'))
-    elif type == 'Video':
-        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
-        # prepare a cursor object using cursor() method
-        cursor = db.cursor()
-        # Prepare SQL query to INSERT a record into the database.
-        sqlSelect = "SELECT MAX(FOLDER) FROM metavideo"
-        try:
-            cursor.execute(sqlSelect)
-            i = cursor.fetchall()
-        except:
-            # Rollback in case there is any error
-            db.rollback()
-        # disconnect from server
-        db.close()
-        if i[0][0] == None:
-            s = ''
-            folder = 0
-        else:
-            s = i[0][0] + 1
-            folder = s
-        target = os.path.join(APP_ROOT, 'video' + str(s) + '/')
-        print(target)
-        if not os.path.isdir(target):
-            os.mkdir(target)
-        else:
-            print("Couldn't create upload directory: {}".format(target))
-        print(request.files.getlist("file"))
-        for upload in request.files.getlist("file"):
-            print(upload)
-            print("{} is the file name".format(upload.filename))
-            filename = upload.filename
-            destination = "/".join([target, filename])
-            print ("Accept incoming file:", filename)
-            print ("Save it to:", destination)
-            upload.save(destination)
-        description = request.form['description']
-        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
-        # prepare a cursor object using cursor() method
-        cursor = db.cursor()
-        # Prepare SQL query to INSERT a record into the database.
-        sqlInsert = "INSERT INTO metavideo(FOLDER, DESCRIPTION)VALUES" \
-                    "('%s', '%s')" % (folder, description)
-        try:
-            # Execute the SQL command
-            cursor.execute(sqlInsert)
-            # Commit your changes in the database
-            db.commit()
-        except:
-            # Rollback in case there is any error
-            db.rollback()
-        # disconnect from server
-        db.close()
-        createVideoHIT.execute()
-        return redirect(url_for('home'))
+@app.route("/uploadVideo", methods=["POST"])
+def uploadVideo():
+    db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+    # prepare a cursor object using cursor() method
+    cursor = db.cursor()
+    # Prepare SQL query to INSERT a record into the database.
+    sqlSelect = "SELECT MAX(FOLDER) FROM metavideo"
+    try:
+        cursor.execute(sqlSelect)
+        i = cursor.fetchall()
+    except:
+        # Rollback in case there is any error
+        db.rollback()
+    # disconnect from server
+    db.close()
+    if i[0][0] == None:
+        s = ''
+        folder = 0
+    else:
+        s = i[0][0] + 1
+        folder = s
+    target = os.path.join(APP_ROOT, 'video' + str(s) + '/')
+    print(target)
+    if not os.path.isdir(target):
+        os.mkdir(target)
+    else:
+        print("Couldn't create upload directory: {}".format(target))
+    print(request.files.getlist("file"))
+    for upload in request.files.getlist("file"):
+        print(upload)
+        print("{} is the file name".format(upload.filename))
+        filename = upload.filename
+        destination = "/".join([target, filename])
+        print ("Accept incoming file:", filename)
+        print ("Save it to:", destination)
+        upload.save(destination)
+    description = request.form['description']
+    db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+    # prepare a cursor object using cursor() method
+    cursor = db.cursor()
+    # Prepare SQL query to INSERT a record into the database.
+    sqlInsert = "INSERT INTO metavideo(FOLDER, DESCRIPTION)VALUES" \
+                "('%s', '%s')" % (folder, description)
+    try:
+        # Execute the SQL command
+        cursor.execute(sqlInsert)
+        # Commit your changes in the database
+        db.commit()
+    except:
+        # Rollback in case there is any error
+        db.rollback()
+    # disconnect from server
+    db.close()
+    createVideoHIT.execute()
+    return redirect(url_for('home'))
 
 
 @app.route("/home")

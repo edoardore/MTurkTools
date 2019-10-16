@@ -5,6 +5,9 @@
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
         crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
 <head>
     <meta charset="UTF-8">
@@ -78,7 +81,7 @@
             <td style="text-align: right">
                 <form id="home-form{{ i }}" action="{{ url_for('homepost') }}" method="POST"
                       enctype="multipart/form-data">
-                    <button style="font-size:16px"  type="submit"
+                    <button style="font-size:16px" type="submit"
                             class="btn btn-secondary" name="button" value='{{i}}'>
                         Refresh
                         <i class="fa fa-refresh"></i>
@@ -103,11 +106,18 @@
 </div>
 
 
-<div style="padding: 50px">
-    <button style="font-size:16px" onclick="window.location.href='/upload'" class="btn btn-secondary">New Task <i
+<div class="dropdown">
+    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+        New Task <i
             class="fa fa-plus"></i>
     </button>
+    <div class="dropdown-menu">
+        <a class="dropdown-item" href="/uploadImm">Image Task</a>
+        <a class="dropdown-item" href="/uploadVid">Video Task</a>
+    </div>
 </div>
+
+
 <div>
     {% if percent!='' %}
     <table class="table table-hover table-dark">
