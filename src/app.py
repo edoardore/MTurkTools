@@ -45,9 +45,11 @@ def start():
 def uploadImm():
     return render_template("uploadImm.html")
 
+
 @app.route("/uploadVid")
 def uploadVid():
     return render_template("uploadVid.html")
+
 
 @app.route("/uploadImage", methods=["POST"])
 def uploadImage():
@@ -245,8 +247,8 @@ def dashboardnp():
 
 @app.route("/chartFile")
 def chartFile():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -276,13 +278,47 @@ def chartFile():
             db.rollback()
         # disconnect from server
         db.close()
-    return render_template("chartFile.html", result=result, data1='0', data2='0')
+    return render_template("chartFile.html", result=result, data1='0', data2='0',
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
+
+
+def getTaskName(numDashboard):
+    if numDashboard < 100 and numDashboard >= 0:
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DESCRIPTION FROM `metaimage` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    elif numDashboard >= 100 and numDashboard < 200:
+        numDashboard = numDashboard - 100
+        db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
+        # prepare a cursor object using cursor() method
+        cursor = db.cursor()
+        # Prepare SQL query to INSERT a record into the database.
+        sqlSelect = "SELECT DESCRIPTION FROM `metavideo` WHERE FOLDER='%s'" % numDashboard
+        try:
+            cursor.execute(sqlSelect)
+            result = cursor.fetchall()
+        except:
+            # Rollback in case there is any error
+            db.rollback()
+        # disconnect from server
+        db.close()
+    return str(result[0][0])
 
 
 @app.route('/chartFileP', methods=['POST'])
 def chartFileP():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         imm = request.form['file']
         imm = str(imm)
@@ -331,13 +367,14 @@ def chartFileP():
     for tuple in result1:
         quality.append(tuple[0])
         worker.append(str(tuple[1]))
-    return render_template("chartFile.html", result=result, data1=quality, data2=worker, file=file)
+    return render_template("chartFile.html", result=result, data1=quality, data2=worker, file=file,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route("/chartFileWidget")
 def chartFileWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -367,13 +404,14 @@ def chartFileWidget():
             db.rollback()
         # disconnect from server
         db.close()
-    return render_template("chartFileWidget.html", result=result, data1='0', data2='0')
+    return render_template("chartFileWidget.html", result=result, data1='0', data2='0',
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/chartFilePWidget', methods=['POST'])
 def chartFilePWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         imm = request.form['file']
         imm = str(imm)
@@ -422,13 +460,14 @@ def chartFilePWidget():
     for tuple in result1:
         quality.append(tuple[0])
         worker.append(str(tuple[1]))
-    return render_template("chartFileWidget.html", result=result, data1=quality, data2=worker, file=file)
+    return render_template("chartFileWidget.html", result=result, data1=quality, data2=worker, file=file,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/chartWorker')
 def chartWorker():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -458,13 +497,14 @@ def chartWorker():
             db.rollback()
         # disconnect from server
         db.close()
-    return render_template("chartWorker.html", result=result, data1='0', data2='0')
+    return render_template("chartWorker.html", result=result, data1='0', data2='0',
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/chartWorkerP', methods=['POST'])
 def chartWorkerP():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     workerid = request.form['worker_id']
     workerid = str(workerid)
     if numDashboard < 100 and numDashboard >= 0:
@@ -509,13 +549,14 @@ def chartWorkerP():
     for tuple in result1:
         quality.append(tuple[0])
         file.append(str(tuple[1])[53:])
-    return render_template("chartWorker.html", result=result, data1=quality, data2=file, worker=workerid)
+    return render_template("chartWorker.html", result=result, data1=quality, data2=file, worker=workerid,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/chartWorkerWidget')
 def chartWorkerWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -545,13 +586,14 @@ def chartWorkerWidget():
             db.rollback()
         # disconnect from server
         db.close()
-    return render_template("chartWorkerWidget.html", result=result, data1='0', data2='0')
+    return render_template("chartWorkerWidget.html", result=result, data1='0', data2='0',
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/chartWorkerPWidget', methods=['POST'])
 def chartWorkerPWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     workerid = request.form['worker_id']
     workerid = str(workerid)
     if numDashboard < 100 and numDashboard >= 0:
@@ -596,13 +638,14 @@ def chartWorkerPWidget():
     for tuple in result1:
         quality.append(tuple[0])
         file.append(str(tuple[1])[53:])
-    return render_template("chartWorkerWidget.html", result=result, data1=quality, data2=file, worker=workerid)
+    return render_template("chartWorkerWidget.html", result=result, data1=quality, data2=file, worker=workerid,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/radar')
 def radar():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -632,13 +675,14 @@ def radar():
             db.rollback()
         # disconnect from server
         db.close()
-    return render_template("radar.html", result=result, data1='0', data2='0')
+    return render_template("radar.html", result=result, data1='0', data2='0',
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/radarP', methods=['POST'])
 def radarP():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     workerid1 = request.form['worker_id1']
     workerid2 = request.form['worker_id2']
     workerid1 = str(workerid1)
@@ -695,13 +739,13 @@ def radarP():
     for tuple in result2:
         quality2.append(tuple[0])
     return render_template("radar.html", result=result, data1=quality1, data2=quality2, workerid1=workerid1,
-                           workerid2=workerid2)
+                           workerid2=workerid2, taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/radarWidget')
 def radarWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -731,13 +775,14 @@ def radarWidget():
             db.rollback()
         # disconnect from server
         db.close()
-    return render_template("radarWidget.html", result=result, data1='0', data2='0')
+    return render_template("radarWidget.html", result=result, data1='0', data2='0',
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/radarPWidget', methods=['POST'])
 def radarPWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     workerid1 = request.form['worker_id1']
     workerid2 = request.form['worker_id2']
     workerid1 = str(workerid1)
@@ -794,13 +839,13 @@ def radarPWidget():
     for tuple in result2:
         quality2.append(tuple[0])
     return render_template("radarWidget.html", result=result, data1=quality1, data2=quality2, workerid1=workerid1,
-                           workerid2=workerid2)
+                           workerid2=workerid2, taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route("/cake")
 def cake():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -830,13 +875,14 @@ def cake():
             db.rollback()
         # disconnect from server
         db.close()
-    return render_template("cake.html", result=result, data1='0', data2='0')
+    return render_template("cake.html", result=result, data1='0', data2='0',
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/cakeP', methods=['POST'])
 def cakeP():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         imm = request.form['file']
         imm = str(imm)
@@ -883,13 +929,14 @@ def cakeP():
     quality = []
     for tuple in result1:
         quality.append(tuple[0])
-    return render_template("cake.html", result=result, data1=quality, file=file)
+    return render_template("cake.html", result=result, data1=quality, file=file,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route("/cakeWidget")
 def cakeWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -919,13 +966,14 @@ def cakeWidget():
             db.rollback()
         # disconnect from server
         db.close()
-    return render_template("cakeWidget.html", result=result, data1='0', data2='0')
+    return render_template("cakeWidget.html", result=result, data1='0', data2='0',
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/cakePWidget', methods=['POST'])
 def cakePWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         imm = request.form['file']
         imm = str(imm)
@@ -972,13 +1020,14 @@ def cakePWidget():
     quality = []
     for tuple in result1:
         quality.append(tuple[0])
-    return render_template("cakeWidget.html", result=result, data1=quality, file=file)
+    return render_template("cakeWidget.html", result=result, data1=quality, file=file,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/topUser')
 def topUser():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         typefile = 'Image' + str(numDashboard)
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
@@ -1017,13 +1066,14 @@ def topUser():
     for tuple in result:
         workerid.append(str(tuple[0]))
         count.append(tuple[1])
-    return render_template("topUser.html", data1=workerid, data2=count, file=typefile)
+    return render_template("topUser.html", data1=workerid, data2=count, file=typefile,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/topUserWidget')
 def topUserWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         typefile = 'Image' + str(numDashboard)
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
@@ -1062,13 +1112,14 @@ def topUserWidget():
     for tuple in result:
         workerid.append(str(tuple[0]))
         count.append(tuple[1])
-    return render_template("topUserWidget.html", data1=workerid, data2=count, file=typefile)
+    return render_template("topUserWidget.html", data1=workerid, data2=count, file=typefile,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/scatter')
 def scatter():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         typefile = 'Image' + str(numDashboard)
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
@@ -1109,13 +1160,14 @@ def scatter():
         workerid.append(str(triple[0]))
         count.append(triple[1])
         average.append(triple[2])
-    return render_template("scatter.html", data1=workerid, data2=count, data3=average, file=typefile)
+    return render_template("scatter.html", data1=workerid, data2=count, data3=average, file=typefile,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/scatterWidget')
 def scatterWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         typefile = 'Image' + str(numDashboard)
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
@@ -1156,13 +1208,14 @@ def scatterWidget():
         workerid.append(str(triple[0]))
         count.append(triple[1])
         average.append(triple[2])
-    return render_template("scatterWidget.html", data1=workerid, data2=count, data3=average, file=typefile)
+    return render_template("scatterWidget.html", data1=workerid, data2=count, data3=average, file=typefile,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/randomChart')
 def randomChart():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         typefile = 'Image' + str(numDashboard)
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
@@ -1207,13 +1260,14 @@ def randomChart():
                 count.append(triple[1])
             else:
                 count.append(triple[1] + triple[2])
-    return render_template("randomChart.html", data1=workerid, data2=count, file=typefile)
+    return render_template("randomChart.html", data1=workerid, data2=count, file=typefile,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/randomChartWidget')
 def randomChartWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         typefile = 'Image' + str(numDashboard)
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
@@ -1258,18 +1312,21 @@ def randomChartWidget():
                 count.append(triple[1])
             else:
                 count.append(triple[1] + triple[2])
-    return render_template("randomChartWidget.html", data1=workerid, data2=count, file=typefile)
+    return render_template("randomChartWidget.html", data1=workerid, data2=count, file=typefile,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/sexChart')
 def sexChart():
-    return render_template("sexChart.html", data1='0', sex='')
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    return render_template("sexChart.html", data1='0', sex='', taskname='Task: ' + getTaskName(numDashboard))
 
 
 @app.route('/sexChartP', methods=['POST'])
 def sexChartP():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     sex = request.form['sex']
     sex = str(sex)
     if numDashboard < 100 and numDashboard >= 0:
@@ -1306,18 +1363,21 @@ def sexChartP():
     quality = []
     for tuple in result:
         quality.append(tuple[0])
-    return render_template("sexChart.html", data1=quality, sex=sex)
+    return render_template("sexChart.html", data1=quality, sex=sex,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/sexChartWidget')
 def sexChartWidget():
-    return render_template("sexChartWidget.html", data1='0', sex='')
+    numDashboard = session['dashboard']
+    numDashboard = int(numDashboard)
+    return render_template("sexChartWidget.html", data1='0', sex='', taskname='Task: ' + getTaskName(numDashboard))
 
 
 @app.route('/sexChartPWidget', methods=['POST'])
 def sexChartPWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     sex = request.form['sex']
     sex = str(sex)
     if numDashboard < 100 and numDashboard >= 0:
@@ -1354,13 +1414,14 @@ def sexChartPWidget():
     quality = []
     for tuple in result:
         quality.append(tuple[0])
-    return render_template("sexChartWidget.html", data1=quality, sex=sex)
+    return render_template("sexChartWidget.html", data1=quality, sex=sex,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/resolution')
 def resolution():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -1397,13 +1458,14 @@ def resolution():
     resolution = []
     for tuple in result:
         resolution.append(tuple[0])
-    return render_template("resolution.html", data1=resolution, file=file)
+    return render_template("resolution.html", data1=resolution, file=file,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/resolutionWidget')
 def resolutionWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -1440,13 +1502,14 @@ def resolutionWidget():
     resolution = []
     for tuple in result:
         resolution.append(tuple[0])
-    return render_template("resolutionWidget.html", data1=resolution, file=file)
+    return render_template("resolutionWidget.html", data1=resolution, file=file,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/age')
 def age():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -1483,13 +1546,13 @@ def age():
     age = []
     for tuple in result:
         age.append(tuple[0])
-    return render_template("age.html", data1=age, file=file)
+    return render_template("age.html", data1=age, file=file, taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/ageWidget')
 def ageWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -1526,7 +1589,8 @@ def ageWidget():
     age = []
     for tuple in result:
         age.append(tuple[0])
-    return render_template("ageWidget.html", data1=age, file=file)
+    return render_template("ageWidget.html", data1=age, file=file,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/personal')
@@ -1559,8 +1623,8 @@ def personalp():
 
 @app.route('/compared')
 def compared():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -1599,13 +1663,14 @@ def compared():
         quality.append(triple[0])
         file.append(triple[1][53:])
         stddev.append(triple[2])
-    return render_template('compared.html', data1=quality, data2=file, data3=stddev)
+    return render_template('compared.html', data1=quality, data2=file, data3=stddev,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 @app.route('/comparedWidget')
 def comparedWidget():
-    numDashboard = session['dashboard']
-    numDashboard = int(numDashboard)
+    oldnumDashboard = session['dashboard']
+    numDashboard = int(oldnumDashboard)
     if numDashboard < 100 and numDashboard >= 0:
         db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
         # prepare a cursor object using cursor() method
@@ -1644,7 +1709,8 @@ def comparedWidget():
         quality.append(triple[0])
         file.append(triple[1][53:])
         stddev.append(triple[2])
-    return render_template('comparedWidget.html', data1=quality, data2=file, data3=stddev)
+    return render_template('comparedWidget.html', data1=quality, data2=file, data3=stddev,
+                           taskname='Task: ' + getTaskName(int(oldnumDashboard)))
 
 
 if __name__ == "__main__":
