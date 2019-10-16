@@ -1,0 +1,116 @@
+<!-- You must copy and paste this layout at https://requestersandbox.mturk.com/create/projects/new selecting 'other' template-->
+
+<!-- You must include this JavaScript file -->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script> <!-- For the full list of available Crowd HTML Elements and their input/output documentation, please refer to https://docs.aws.amazon.com/sagemaker/latest/dg/sms-ui-template-reference.html -->
+<!--Import bootstrap-->
+<style>
+    div {
+        text-align: center;
+    }
+
+    h4 {
+        text-align: center;
+    }
+
+    #selAge {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #left {
+        text-align: left;
+    }
+</style>
+<link
+        rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+        crossorigin="anonymous"> <!-- You must include crowd-form so that your task submits answers to MTurk -->
+<div>
+    <crowd-form answer-format="flatten-objects">
+        <div id="left">
+            <crowd-instructions link-text="View instructions" link-type="button">
+                <short-summary>
+                    <p>You need to evaluate the quality of the images</p>
+                </short-summary>
+                <detailed-instructions>
+                    <h3>How to compile the HIT:</h3>
+                    <p>First you need to compile the form and then evaluate the image with the slider.</p>
+                </detailed-instructions>
+                <positive-example>
+                    <p>You must compile all field and evaluate the image proposed for you</p>
+                </positive-example>
+                <negative-example>
+                    <p>You must not answer randomly, you must evaluate the image based on your sensations</p>
+                </negative-example>
+            </crowd-instructions>
+        </div>
+
+        <fieldset>
+            <!-- Form Name -->
+            <h4>Image Quality HIT</h4>
+            <div class="form-group">
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="selAge">Age:</label>
+                    <div class="col-md-4" id="selAge">
+                        <select class="custom-select" name="age" required>
+                            <option selected value="">Choose Age...</option>
+                            <option value="0-18">0-18</option>
+                            <option value="19-39">19-39</option>
+                            <option value="40-59">40-59</option>
+                            <option value="60-100">60-100</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="genderM">Sex:</label>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="genderM" name="sex" class="custom-control-input" value="M" required>
+                        <label class="custom-control-label" for="genderM">Male</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="genderF" name="sex" class="custom-control-input" value="F" required>
+                        <label class="custom-control-label" for="genderF">Female</label>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <p>Evaluate the quality of this image:</p>
+            </div>
+            <div>
+                <img src="${img}">
+            </div>
+            <div>
+                <ul>
+                    <span>Bad</span>
+                    <span>Poor</span>
+                    <span>Fair</span>
+                    <span>Good</span>
+                    <span>Excellent</span>
+                </ul>
+            </div>
+            <div>
+                <style>
+                    #my-slider {
+                        display: block;
+                        margin-left: auto;
+                        margin-right: auto;
+                    }
+                </style>
+                <crowd-slider name="quality" id="my-slider" min="0" max="100" step="1" pin="true"
+                              required onchange="enableButton()"></crowd-slider>
+                <input id="browser-resolution" type="hidden" name="resolution" value="">
+                <script>
+                    document.getElementById('browser-resolution').value = screen.width + "x" + screen.height;
+                </script>
+            </div>
+        </fieldset>
+        <crowd-button form-action="submit" id="submit" variant="primary" disabled>Submit</crowd-button>
+        <script>
+            function enableButton() {
+                document.getElementById("submit").disabled = false;
+            }
+        </script>
+    </crowd-form>
+</div>
