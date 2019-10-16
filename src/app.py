@@ -1590,12 +1590,12 @@ def compared():
         db.close()
     quality = []
     file = []
-    variance = []
+    stddev = []
     for triple in result:
         quality.append(triple[0])
         file.append(triple[1][53:])
-        variance.append(triple[2])
-    return render_template('compared.html', data1=quality, data2=file, data3=variance)
+        stddev.append(triple[2])
+    return render_template('compared.html', data1=quality, data2=file, data3=stddev)
 
 
 @app.route('/comparedWidget')
@@ -1635,12 +1635,12 @@ def comparedWidget():
         db.close()
     quality = []
     file = []
-    variance = []
+    stddev = []
     for triple in result:
         quality.append(triple[0])
         file.append(triple[1][53:])
-        variance.append(triple[2])
-    return render_template('comparedWidget.html', data1=quality, data2=file, data3=variance)
+        stddev.append(triple[2])
+    return render_template('comparedWidget.html', data1=quality, data2=file, data3=stddev)
 
 
 if __name__ == "__main__":
