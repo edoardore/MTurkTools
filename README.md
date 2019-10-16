@@ -10,7 +10,7 @@ Tool che permette la creazione di hit tramite iterfaccia grafica, utilizza il fr
 6) Possibilità di creare numerosi task e di analizzarne i risultati dopo la sottomissione da parte dei Workers.
 
 ## Dashboard:
-Si mostrano 10 grafici riferiti al task scelto:
+Si mostrano 11 (+1 modulare) grafici riferiti al task scelto:
 1) Storia delle valutazioni per un singolo file (Immagine o Video). (Line graph)
 2) Storia delle valutazioni effettuate da un singolo Worker (su Video o Immagini). (Line graph)
 3) Confronto delle valutazioni effettuate da due Worker. (Radar graph)
