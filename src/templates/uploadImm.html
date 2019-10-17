@@ -28,31 +28,32 @@
     }
 </style>
 
+<div style="padding: 155px;">
+    <form id="upload-form" action="{{ url_for('uploadImage') }}" method="POST" enctype="multipart/form-data">
+        <div>
+            <strong>Files: <i class="fa fa-file"></i>
+            </strong><br>
+            <input id="file-picker" type="file" class="btn btn-light" name="file" multiple>
+        </div>
+        <div id="msg"></div>
+        <div>
+            <textarea rows="4" cols="50" name="description" form="upload-form">Enter description here...</textarea>
+        </div>
+        <div>
+            <button style="font-size:16px" class="btn btn-light" type="submit" value="Upload">Upload <i
+                    class="fa fa-upload"></i>
+            </button>
+        </div>
+    </form>
 
-<form id="upload-form" action="{{ url_for('uploadImage') }}" method="POST" enctype="multipart/form-data">
     <div>
-        <strong>Files: <i class="fa fa-file"></i>
-        </strong><br>
-        <input id="file-picker" type="file" class="btn btn-light" name="file" multiple>
-    </div>
-    <div id="msg"></div>
-    <div>
-        <textarea rows="4" cols="50" name="description" form="upload-form">Enter description here...</textarea>
-    </div>
-    <div>
-        <button style="font-size:16px" class="btn btn-light" type="submit" value="Upload">Upload <i
-                class="fa fa-upload"></i>
+        <button style="font-size:16px" onclick="window.location.href='/home'" class="btn btn-dark" type="submit">Home
+            <i
+                    class="fa fa-home"></i>
         </button>
     </div>
-</form>
 
-<div>
-    <button style="font-size:16px" onclick="window.location.href='/home'" class="btn btn-dark" type="submit">Home
-        <i
-                class="fa fa-home"></i>
-    </button>
 </div>
-
 </body>
 <script>
 
