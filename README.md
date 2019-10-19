@@ -8,7 +8,7 @@ Tool che permette la creazione di hit tramite iterfaccia grafica, utilizza il fr
 4) Copy&Paste the content of layoutImages.html in DESIGN LAYOUT (pass 2 for the creation)
 5) Save 
 6) Copy HITTypeID and LayoutID from ![alt text](instruction2.PNG)
-7) Paste  HITTypeID and LayoutID in [Key.py](https://www.aaa.com)
+7) Paste  HITTypeID and LayoutID in [Key.py](https://github.com/edoardore/MTurkTools/blob/master/src/Key.py)
 
 Repeat 2...7 with layoutVideo.html.
 
@@ -19,7 +19,7 @@ Repeat 2...7 with layoutVideo.html.
 12) Select AmazonMechanicalTurkFullAccess like: ![alt text](instruction5.PNG)
 13) Insert new key like: ![alt text](instruction6.PNG)
 14) Select Next, and Create User
-15) Copy the two key in ![alt text](instruction7.PNG) and paste it in [Key.py](https://www.aaa.com)
+15) Copy the two key in ![alt text](instruction7.PNG) and paste it in [Key.py](https://github.com/edoardore/MTurkTools/blob/master/src/Key.py)
 
 ## SetUp Amazon S3:
 1) Sign in [here](https://s3.console.aws.amazon.com/s3/home?region=eu-central-1#) with AWS userid and password created earlier.
