@@ -14,6 +14,11 @@ app.secret_key = "super secret key"
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
+global percentage
+percentage = []
+for i in range(0, 200):
+    percentage.append('')
+
 
 @app.route("/")
 def start():
@@ -194,15 +199,38 @@ def home():
     for description in resultvideo:
         result[i] = description[0]
         i += 1
-    return render_template("home.html", label=result, percent='')
+    return render_template("home.html", label=result, percentage=percentage)
+
+
+buttonNumber = []
 
 
 @app.route("/homepost", methods=['POST'])
 def homepost():
-    refreshButtonNumber = request.form['button']
+    global buttonNumber
+    buttonNumber.append(request.form['button_number'])
+    return jsonify(None)
+
+
+@app.route("/homejson")
+def homejson():
+    words = {}
+    refreshButtonNumber = buttonNumber.pop()
+    refreshButtonNumber = int(refreshButtonNumber)
+    if refreshButtonNumber < 100 and refreshButtonNumber >= 0:
+        words['percent'] = str(resultsImm.execute(refreshButtonNumber)) + '%'
+    elif refreshButtonNumber >= 100 and refreshButtonNumber < 200:
+        words['percent'] = str(resultsVid.execute(refreshButtonNumber - 100)) + '%'
+    percentage[refreshButtonNumber] = words['percent']
+    return jsonify(words)
+
+
+@app.route('/refreshall', methods=['POST'])
+def refreshall():
     db = pymysql.connect("localhost", "utente", "pass123", "dbmysql")
     # prepare a cursor object using cursor() method
     cursor = db.cursor()
+    # Prepare SQL query to INSERT a record into the database.
     sqlSelect = "SELECT DESCRIPTION FROM metaimage"
     sqlSelect2 = "SELECT DESCRIPTION FROM metavideo"
     try:
@@ -221,17 +249,14 @@ def homepost():
     i = 0
     for description in resultimage:
         result[i] = description[0]
+        percentage[i] = str(resultsImm.execute(i)) + '%'
         i += 1
     i = 100
     for description in resultvideo:
         result[i] = description[0]
+        percentage[i] = str(resultsVid.execute(i - 100)) + '%'
         i += 1
-    refreshButtonNumber = int(refreshButtonNumber)
-    if refreshButtonNumber < 100 and refreshButtonNumber >= 0:
-        percent = str(resultsImm.execute(refreshButtonNumber)) + '% of the Task completed by Workers'
-    elif refreshButtonNumber >= 100 and refreshButtonNumber < 200:
-        percent = str(resultsVid.execute(refreshButtonNumber - 100)) + '% of the Task completed by Workers'
-    return render_template("home.html", label=result, percent=percent)
+    return redirect(url_for('home'))
 
 
 @app.route("/dashboard", methods=["POST"])

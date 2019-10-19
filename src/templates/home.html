@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <link
         rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
@@ -33,7 +33,7 @@
     <table class="table table-striped table-dark table-borderless">
         {% if label[0]!='' %}
         <tr>
-            <td style="text-align: center" colspan="3">
+            <td style="text-align: center" colspan="4">
                 IMAGE TASKS
             </td>
         </tr>
@@ -42,15 +42,17 @@
         {% if label[i]!='' %}
         <tr>
             <td>{{label[i]}}</td>
+            <td style="text-align: left">
+                <a id="percentage{{i }}">{{percentage[i]}}</a>
+            </td>
             <td style="text-align: right">
-                <form id="home-form{{i}}" action="{{ url_for('homepost') }}" method="POST"
-                      enctype="multipart/form-data">
-                    <button style="font-size:16px" type="submit"
-                            class="btn btn-secondary" name="button" value='{{i}}'>
-                        Refresh
-                        <i class="fa fa-refresh"></i>
-                    </button>
-                </form>
+
+                <button style="font-size:16px" id='get_data{{i }}' class="btn btn-secondary" name="button"
+                        value='{{i}}'>
+                    Refresh
+                    <i class="fa fa-refresh"></i>
+                </button>
+
             </td>
             <td style="text-align: right">
                 <form id="home-form{{i }}" action="{{ url_for('dashboard') }}" method="POST"
@@ -67,9 +69,10 @@
         {% endif %}
         {% endfor %}
 
+
         {% if label[100]!='' %}
         <tr>
-            <td style="text-align: center" colspan="3">
+            <td style="text-align: center" colspan="4">
                 VIDEO TASKS
             </td>
         </tr>
@@ -78,15 +81,17 @@
         {% if label[i]!='' %}
         <tr>
             <td>{{label[i]}}</td>
+
+            <td style="text-align: left">
+                <a id="percentage{{i}}">{{percentage[i]}}</a>
+            </td>
             <td style="text-align: right">
-                <form id="home-form{{ i }}" action="{{ url_for('homepost') }}" method="POST"
-                      enctype="multipart/form-data">
-                    <button style="font-size:16px" type="submit"
-                            class="btn btn-secondary" name="button" value='{{i}}'>
-                        Refresh
-                        <i class="fa fa-refresh"></i>
-                    </button>
-                </form>
+
+                <button style="font-size:16px" id='get_data{{i}}' class="btn btn-secondary" name="button" value='{{i}}'>
+                    Refresh
+                    <i class="fa fa-refresh"></i>
+                </button>
+
             </td>
             <td style="text-align: right;">
                 <form id="home-form{{ i}}" action="{{ url_for('dashboard') }}" method="POST"
@@ -102,9 +107,36 @@
         </tr>
         {% endif %}
         {% endfor %}
+        <tr>
+            <td style="text-align: center" colspan="4">
+                <form id="refresh" action="{{ url_for('refreshall') }}" method="POST">
+                    <button type="submit" class="btn btn-secondary">
+                        Refresh All <i
+                            class="fa fa-refresh"></i>
+                    </button>
+                </form>
+            </td>
+        </tr>
     </table>
 </div>
 
+{% for i in range(0, 200) %}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#get_data{{i}}').click(function () {
+            var button = document.getElementById("get_data{{i}}").value;
+            $.post(
+                "/homepost",
+                {button_number: button}
+            );
+            $.getJSON('/homejson', function (dat) {
+                $("#percentage{{i}}").text(dat['percent']);
+            });
+        });
+    });
+</script>
+{% endfor %}
 
 <div class="dropdown">
     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
@@ -116,19 +148,5 @@
         <a class="dropdown-item" href="/uploadVid">Video Task</a>
     </div>
 </div>
-
-
-<div>
-    {% if percent!='' %}
-    <table class="table table-hover table-dark">
-        <tr>
-            <td>
-                <h3>{{percent}}</h3>
-            </td>
-        </tr>
-    </table>
-    {% endif %}
-</div>
-
 </body>
 </html>
