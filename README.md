@@ -5,7 +5,7 @@ Tool che permette la creazione di hit tramite iterfaccia grafica, utilizza il fr
 1) Sign in as a Requester [here](https://www.mturk.com) and create an Amazon account.
 2) Create New Project [here](https://requester.mturk.com/create/projects/new) selecting Other type for the template.
 3) Follow this image: ![alt text](instruction1.PNG)
-4) Copy&Paste the content of layoutImages.html in DESIGN LAYOUT (pass 2 for the creation)
+4) Copy&Paste the content of [layoutImages.html](https://github.com/edoardore/MTurkTools/blob/master/layoutImages.html) in DESIGN LAYOUT (pass 2 for the creation)
 5) Save 
 6) Copy HITTypeID and LayoutID from ![alt text](instruction2.PNG)
 7) Paste  HITTypeID and LayoutID in [Key.py](https://github.com/edoardore/MTurkTools/blob/master/src/Key.py)
