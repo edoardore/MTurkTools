@@ -41,11 +41,11 @@
         {%for i in range(0,100)%}
         {% if label[i]!='' %}
         <tr>
-            <td>{{label[i]}}</td>
-            <td style="text-align: left">
+            <td style="width: 64% ;">{{label[i]}}</td>
+            <td style="text-align: center;width: 12% ;">
                 <a id="percentage{{i }}">{{percentage[i]}}</a>
             </td>
-            <td style="text-align: right">
+            <td style="text-align: center; width: 12% ;">
 
                 <button style="font-size:16px" id='get_data{{i }}' class="btn btn-secondary" name="button"
                         value='{{i}}'>
@@ -54,7 +54,7 @@
                 </button>
 
             </td>
-            <td style="text-align: right">
+            <td style="text-align: center; width: 12%;">
                 <form id="home-form{{i }}" action="{{ url_for('dashboard') }}" method="POST"
                       enctype="multipart/form-data">
                     <button style="font-size:16px" onclick="window.location.href='/dashboard'"
@@ -80,12 +80,12 @@
         {%for i in range(100,200)%}
         {% if label[i]!='' %}
         <tr>
-            <td>{{label[i]}}</td>
+            <td style="width: 64%;">{{label[i]}}</td>
 
-            <td style="text-align: left">
+            <td style="text-align: center; width: 12%;">
                 <a id="percentage{{i}}">{{percentage[i]}}</a>
             </td>
-            <td style="text-align: right">
+            <td style="text-align: center; width: 12%;">
 
                 <button style="font-size:16px" id='get_data{{i}}' class="btn btn-secondary" name="button" value='{{i}}'>
                     Refresh
@@ -93,7 +93,7 @@
                 </button>
 
             </td>
-            <td style="text-align: right;">
+            <td style="text-align: center; width: 12%;">
                 <form id="home-form{{ i}}" action="{{ url_for('dashboard') }}" method="POST"
                       enctype="multipart/form-data">
                     <button style="font-size:16px" onclick="window.location.href='/dashboard'"
