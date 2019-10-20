@@ -84,5 +84,3 @@ Use the [requirement.txt](https://github.com/edoardore/MTurkTools/blob/master/re
 
 ## License
 [Edoardo Re](https://github.com/edoardore), 2019
-
-[Chart.js](https://www.chartjs.org)
