@@ -4,26 +4,26 @@ This tool permits the creation of multiple Tasks of multiple HITs (images or vid
 ## SetUp MTurk:
 1) Sign in as a Requester [here](https://www.mturk.com) and create an Amazon account.
 2) Create New Project [here](https://requester.mturk.com/create/projects/new) selecting Other type for the template.
-3) Follow this image: ![alt text](src/instructionImg/instruction1.PNG)
+3) Follow this image: ![alt text](instructionImg/instruction1.PNG)
 4) Copy&Paste the content of [layoutImages.html](https://github.com/edoardore/MTurkTools/blob/master/layoutImages.html) in DESIGN LAYOUT (pass 2 for the creation).
 5) Save.
-6) Copy HITTypeID and LayoutID from: ![alt text](src/instructionImg/instruction2.PNG)
+6) Copy HITTypeID and LayoutID from: ![alt text](instructionImg/instruction2.PNG)
 7) Paste  HITTypeID and LayoutID in [Key.py](https://github.com/edoardore/MTurkTools/blob/master/src/Key.py).
 
 Repeat 2...7 with [layoutVideo.html](https://github.com/edoardore/MTurkTools/blob/master/layoutVideo.html).
 
 8) Create AWS account [here](https://aws.amazon.com/it/).
 9) Set up IAM console [here](https://console.aws.amazon.com/iam).
-10) Follow this and click on ADD USER: ![alt text](src/instructionImg/instruction3.PNG)
-11) Enter text like and press Next button. ![alt text](src/instructionImg/instruction4.PNG)
-12) Select AmazonMechanicalTurkFullAccess like: ![alt text](src/instructionImg/instruction5.PNG)
-13) Insert new key like: ![alt text](src/instructionImg/instruction6.PNG)
+10) Follow this and click on ADD USER: ![alt text](instructionImg/instruction3.PNG)
+11) Enter text like and press Next button. ![alt text](instructionImg/instruction4.PNG)
+12) Select AmazonMechanicalTurkFullAccess like: ![alt text](instructionImg/instruction5.PNG)
+13) Insert new key like: ![alt text](instructionImg/instruction6.PNG)
 14) Select Next, and Create User.
-15) Copy the two keys and paste it in [Key.py](https://github.com/edoardore/MTurkTools/blob/master/src/Key.py): ![alt text](src/instructionImg/instruction7.PNG) 
+15) Copy the two keys and paste it in [Key.py](https://github.com/edoardore/MTurkTools/blob/master/src/Key.py): ![alt text](instructionImg/instruction7.PNG) 
 ## SetUp Amazon S3:
 1) Sign in [here](https://s3.console.aws.amazon.com/s3/home?region=eu-central-1#) with AWS UserID and password created earlier.
 2) Create (in different times) two new buckets named: `imagesformturk` and `videosformturk`.
-3) Deselect `Block all public access` here: ![alt text](src/instructionImg/instruction8.PNG)
+3) Deselect `Block all public access` here: ![alt text](instructionImg/instruction8.PNG)
 4) Press Create Bucket.
 5) In `imagesformturk` open bucket -> go to authorization -> Policy Bucket and paste:
 ```{
