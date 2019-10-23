@@ -63,7 +63,8 @@ User:"utente"
 Password: "pass123"
 DB Name:"dbmysql"
 
-
+## Initialize Python Code:
+1) Uncomment in createImmHIT.py, resultsImm.py, createVideoHIT.py, resultsVid.py the line to connect to the live marketplace instead of the sandbox.
 
 Now it's all setted up! The tool can work correctly.
 Use the [requirement.txt](https://github.com/edoardore/MTurkTools/blob/master/requirements.txt) to recreate the virtual env for the project.
