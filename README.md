@@ -55,6 +55,16 @@ Repeat 2...7 with [layoutVideo.html](https://github.com/edoardore/MTurkTools/blo
 }
 ```
 
+
+## Initialize MySQL DataBase:
+1) Download Xampp [here](https://www.apachefriends.org/it/download.html)
+2) After installed go to `http://localhost/phpmyadmin/` and create DB with these specifics:
+User:"utente"
+Password: "pass123"
+DB Name:"dbmysql"
+
+
+
 Now it's all setted up! The tool can work correctly.
 Use the [requirement.txt](https://github.com/edoardore/MTurkTools/blob/master/requirements.txt) to recreate the virtual env for the project.
 
