@@ -58,7 +58,7 @@ Repeat 2...7 with [layoutVideo.html](https://github.com/edoardore/MTurkTools/blo
 
 ## Initialize MySQL DataBase:
 1) Download Xampp [here](https://www.apachefriends.org/it/download.html)
-2) After installed go to `http://localhost/phpmyadmin/` and create DB with these specifics:
+2) After having installed go to `http://localhost/phpmyadmin/` and create DB with these specifics:
 User:"utente"
 Password: "pass123"
 DB Name:"dbmysql"
